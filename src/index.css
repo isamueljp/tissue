@@ -3,48 +3,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Society6 Discord-like Design System */
+/* Society6 Twitter-like Design System */
 
 @layer base {
   :root {
-    --background: 54 57 63;
-    --foreground: 220 221 222;
+    --background: 0 0 0;
+    --foreground: 255 255 255;
 
-    --card: 47 49 54;
-    --card-foreground: 220 221 222;
+    --card: 16 16 16;
+    --card-foreground: 255 255 255;
 
-    --popover: 47 49 54;
-    --popover-foreground: 220 221 222;
+    --popover: 16 16 16;
+    --popover-foreground: 255 255 255;
 
-    --primary: 220 20 60;
+    --primary: 220 38 38;
     --primary-foreground: 255 255 255;
 
-    --secondary: 64 68 75;
-    --secondary-foreground: 185 187 190;
+    --secondary: 32 32 32;
+    --secondary-foreground: 156 163 175;
 
-    --muted: 64 68 75;
-    --muted-foreground: 142 146 151;
+    --muted: 32 32 32;
+    --muted-foreground: 107 114 128;
 
-    --accent: 88 101 242;
+    --accent: 220 38 38;
     --accent-foreground: 255 255 255;
 
-    --destructive: 237 66 69;
+    --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 64 68 75;
-    --input: 64 68 75;
-    --ring: 220 20 60;
+    --border: 32 32 32;
+    --input: 32 32 32;
+    --ring: 220 38 38;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 47 49 54;
-    --sidebar-foreground: 220 221 222;
-    --sidebar-primary: 220 20 60;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 64 68 75;
-    --sidebar-accent-foreground: 220 221 222;
-    --sidebar-border: 32 34 37;
-    --sidebar-ring: 220 20 60;
   }
 }
 
@@ -54,32 +45,20 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-black text-white font-sans;
   }
 }
 
 @layer utilities {
-  .text-gradient-red {
-    @apply bg-gradient-to-r from-primary to-red-400 bg-clip-text text-transparent;
+  .twitter-card {
+    @apply bg-card border border-border hover:border-red-600/50 transition-all duration-200 rounded-lg;
   }
   
-  .text-gradient-blue {
-    @apply bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent;
+  .red-glow {
+    @apply shadow-lg shadow-red-600/20 border border-red-600/30;
   }
   
-  .glass-effect {
-    @apply bg-background/80 backdrop-blur-sm border border-white/10;
-  }
-  
-  .hover-lift {
-    @apply transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20;
-  }
-
-  .discord-card {
-    @apply bg-card rounded-lg border border-border/50 hover:border-primary/30 transition-all duration-200;
-  }
-
-  .futuristic-glow {
-    @apply shadow-lg shadow-primary/10 border border-primary/20;
+  .sidebar-item {
+    @apply flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors;
   }
 }
