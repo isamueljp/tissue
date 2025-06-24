@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Users, Star, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, MessageSquare, Package, ExternalLink } from 'lucide-react';
 
 interface EventCardProps {
   id: string;
@@ -36,62 +36,69 @@ const EventCard = ({
 }: EventCardProps) => {
   const attendancePercentage = (attendeeCount / maxAttendees) * 100;
 
+  const handleJoinWhatsApp = () => {
+    // Simulate WhatsApp group join
+    window.open('https://chat.whatsapp.com/invite-link', '_blank');
+  };
+
   return (
-    <Card className="group bg-card border-border hover:border-primary/30 transition-all duration-300 hover-lift overflow-hidden">
+    <Card className="discord-card hover-lift overflow-hidden group">
       {/* Event Image */}
-      <div className="relative h-48 bg-gradient-to-br from-primary/20 to-accent/20 overflow-hidden">
+      <div className="relative h-40 bg-gradient-to-br from-primary/20 to-accent/20 overflow-hidden">
         {image ? (
           <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-            <Star className="w-12 h-12 text-accent/50" />
+            <MessageSquare className="w-12 h-12 text-primary/50" />
           </div>
         )}
         
-        {/* VIP Badge */}
-        {isVip && (
-          <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground font-semibold">
-            VIP
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex gap-2">
+          <Badge variant={isVip ? "default" : "secondary"} className={isVip ? "bg-primary" : ""}>
+            {category}
           </Badge>
-        )}
+          {isVip && <Badge className="bg-accent">VIP</Badge>}
+        </div>
         
-        {/* Category Badge */}
-        <Badge variant="secondary" className="absolute top-3 left-3">
-          {category}
-        </Badge>
+        {/* Live indicator */}
+        <div className="absolute top-3 right-3">
+          <div className="flex items-center space-x-1 bg-background/80 rounded-full px-2 py-1">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-xs">Live</span>
+          </div>
+        </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 space-y-4">
         {/* Event Header */}
-        <div className="mb-4">
-          <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+        <div>
+          <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
             {title}
           </h3>
           <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
         </div>
 
         {/* Event Details */}
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Calendar className="w-4 h-4 mr-2 text-accent" />
-            <span>{date}</span>
-            <Clock className="w-4 h-4 ml-4 mr-2 text-accent" />
-            <span>{time}</span>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center text-muted-foreground">
+            <Calendar className="w-4 h-4 mr-2 text-primary" />
+            <span>{date} • {time}</span>
           </div>
           
-          <div className="flex items-center text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4 mr-2 text-accent" />
+          <div className="flex items-center text-muted-foreground">
+            <MapPin className="w-4 h-4 mr-2 text-primary" />
             <span>{location}</span>
           </div>
           
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Users className="w-4 h-4 mr-2 text-accent" />
-            <span>{attendeeCount}/{maxAttendees} attending</span>
+          <div className="flex items-center text-muted-foreground">
+            <Users className="w-4 h-4 mr-2 text-primary" />
+            <span>{attendeeCount}/{maxAttendees} joined</span>
           </div>
         </div>
 
         {/* Attendance Progress */}
-        <div className="mb-4">
+        <div>
           <div className="flex justify-between text-xs text-muted-foreground mb-1">
             <span>Attendance</span>
             <span>{Math.round(attendancePercentage)}%</span>
@@ -104,22 +111,38 @@ const EventCard = ({
           </div>
         </div>
 
-        {/* Points & Host */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <Star className="w-4 h-4 text-accent mr-1" />
-            <span className="font-semibold text-accent">{points} pts</span>
-          </div>
-          <span className="text-xs text-muted-foreground">by {hostName}</span>
+        {/* Host & Points */}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">by @{hostName}</span>
+          <span className="font-semibold text-primary">{points} pts</span>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2">
-          <Button className="flex-1 bg-primary hover:bg-primary/90">
-            Join Event
+        <div className="grid grid-cols-2 gap-2">
+          <Button className="bg-primary hover:bg-primary/90" size="sm">
+            <Users className="w-4 h-4 mr-1" />
+            Join
           </Button>
           <Button variant="outline" size="sm">
-            Details
+            <MessageSquare className="w-4 h-4 mr-1" />
+            Chat
+          </Button>
+        </div>
+
+        {/* Discord-like action buttons */}
+        <div className="flex gap-2">
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            className="flex-1"
+            onClick={handleJoinWhatsApp}
+          >
+            <ExternalLink className="w-4 h-4 mr-1" />
+            WhatsApp
+          </Button>
+          <Button variant="secondary" size="sm" className="flex-1">
+            <Package className="w-4 h-4 mr-1" />
+            Contribute
           </Button>
         </div>
       </div>
