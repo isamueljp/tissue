@@ -239,7 +239,7 @@ const Messages = () => {
                       </div>
                       {chat.isLive && (
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                       )}
                     </div>
@@ -396,3 +396,6 @@ const Messages = () => {
       </div>
     </div>
   );
+};
+
+export default Messages;
