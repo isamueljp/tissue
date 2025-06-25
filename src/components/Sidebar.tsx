@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Hash, Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music, Phone, QrCode } from 'lucide-react';
+import { Zap, Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music, Phone } from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
       <div className="flex items-center space-x-2 mb-8">
-        <Hash className="w-8 h-8 text-red-600" />
+        <Zap className="w-8 h-8 text-red-600" />
         <h1 className="text-xl font-bold text-red-600">society6</h1>
       </div>
       
