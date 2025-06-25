@@ -3,39 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Society6 Twitter-like Design System */
+/* Society6 Twitter-like Design System - Simplified */
 
 @layer base {
   :root {
     --background: 0 0 0;
     --foreground: 255 255 255;
-
-    --card: 16 16 16;
+    --card: 10 10 10;
     --card-foreground: 255 255 255;
-
-    --popover: 16 16 16;
+    --popover: 10 10 10;
     --popover-foreground: 255 255 255;
-
     --primary: 220 38 38;
     --primary-foreground: 255 255 255;
-
-    --secondary: 32 32 32;
+    --secondary: 20 20 20;
     --secondary-foreground: 156 163 175;
-
-    --muted: 32 32 32;
+    --muted: 25 25 25;
     --muted-foreground: 107 114 128;
-
     --accent: 220 38 38;
     --accent-foreground: 255 255 255;
-
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-
-    --border: 32 32 32;
-    --input: 32 32 32;
+    --border: 30 30 30;
+    --input: 25 25 25;
     --ring: 220 38 38;
-
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -43,22 +34,65 @@
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-black text-white font-sans;
+    @apply bg-black text-white font-sans antialiased;
   }
 }
 
 @layer utilities {
   .twitter-card {
-    @apply bg-card border border-border hover:border-red-600/50 transition-all duration-200 rounded-lg;
+    @apply bg-card border border-border hover:border-red-600/30 transition-all duration-300 rounded-xl;
   }
   
   .red-glow {
-    @apply shadow-lg shadow-red-600/20 border border-red-600/30;
+    @apply shadow-lg shadow-red-600/10 border border-red-600/20;
   }
   
   .sidebar-item {
-    @apply flex items-center space-x-3 p-3 rounded-lg hover:bg-secondary transition-colors;
+    @apply flex items-center space-x-3 p-3 rounded-xl hover:bg-secondary/50 transition-all duration-200;
   }
+  
+  .event-card {
+    @apply bg-card border border-border rounded-xl p-4 hover:border-red-600/40 transition-all duration-300 cursor-pointer;
+  }
+  
+  .profile-stat {
+    @apply text-center p-4 bg-secondary/30 rounded-xl;
+  }
+  
+  .badge-glow {
+    @apply bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .hype-meter {
+    @apply flex items-center space-x-2 text-sm;
+  }
+  
+  .vibe-indicator {
+    @apply w-2 h-2 rounded-full animate-pulse;
+  }
+  
+  .memory-card {
+    @apply bg-gradient-to-br from-card to-secondary/50 rounded-xl p-4 border border-border/50;
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgb(220 38 38 / 0.3); }
+  50% { box-shadow: 0 0 20px rgb(220 38 38 / 0.6); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
