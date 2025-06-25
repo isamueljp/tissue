@@ -5,264 +5,246 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  DollarSign, TrendingUp, Users, QrCode, Calendar, Trophy, 
-  Instagram, Twitter, Music, MapPin, Star, Gift, Zap,
-  Camera, Heart, MessageCircle, Share, ExternalLink
+  User, Settings, Share, Trophy, Camera, Heart, 
+  MessageCircle, Users, Star, Gift, Zap, Crown
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import UPIPayment from '@/components/UPIPayment';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showPayment, setShowPayment] = useState(false);
+  const { user } = useAuth();
 
-  const socialLinks = [
-    { platform: 'Instagram', handle: '@john.vibes', icon: Instagram, color: 'text-pink-500' },
-    { platform: 'Twitter', handle: '@johnvibes', icon: Twitter, color: 'text-blue-500' },
-    { platform: 'Spotify', handle: 'John\'s Playlists', icon: Music, color: 'text-green-500' }
-  ];
-
-  const badges = [
-    { name: 'Party Wizard', icon: '🧙‍♂️', description: '10 successful events hosted' },
-    { name: 'Community Builder', icon: '🏗️', description: 'Brought 50+ people together' },
-    { name: 'Vibe Curator', icon: '🎵', description: 'Top-rated playlist creator' },
-    { name: 'Snack God', icon: '🍕', description: 'Always brings the best food' }
-  ];
-
-  const recentMemories = [
-    {
-      event: 'Rooftop Chill Session',
-      date: 'Last Friday',
-      photos: 12,
-      likes: 45,
-      people: ['@sarah', '@mike', '@anna']
+  const socialRoles = {
+    connector: {
+      emoji: '🔗',
+      name: 'The Connector',
+      description: 'Master of bringing people together',
+      color: 'bg-blue-600',
+      achievements: ['Connected 50+ people', 'Created 5 group chats', 'Hosted intro events'],
+      nextLevel: 'Connect 100 people to unlock Social Butterfly'
     },
-    {
-      event: 'Gaming Tournament',
-      date: '2 weeks ago',
-      photos: 8,
-      likes: 32,
-      people: ['@alex', '@priya', '@sam']
+    curator: {
+      emoji: '🎨',
+      name: 'The Curator',
+      description: 'Tastemaker of vibes and aesthetics',
+      color: 'bg-purple-600',
+      achievements: ['Top playlist creator', 'Event theme designer', 'Aesthetic guru'],
+      nextLevel: 'Create 10 viral playlists to unlock Vibe Master'
+    },
+    host: {
+      emoji: '🏠',
+      name: 'The Host',
+      description: 'Event launching extraordinaire',
+      color: 'bg-green-600',
+      achievements: ['Hosted 15 events', '5-star host rating', 'Party legend'],
+      nextLevel: 'Host 25 events to unlock Event Royalty'
+    },
+    giver: {
+      emoji: '💝',
+      name: 'The Giver',
+      description: 'Community support champion',
+      color: 'bg-yellow-600',
+      achievements: ['Contributed to 30 events', 'Helped 20 people', 'Generosity king/queen'],
+      nextLevel: 'Contribute to 50 events to unlock Guardian Angel'
     }
-  ];
+  };
 
-  const investments = [
-    { event: 'VIP Pool Party', invested: 250, returns: 312, roi: '+24.8%', status: 'completed' },
-    { event: 'Secret Concert', invested: 150, returns: 0, roi: 'Pending', status: 'active' },
-    { event: 'Beach Cleanup + Party', invested: 100, returns: 125, roi: '+25%', status: 'completed' }
-  ];
+  const currentRole = socialRoles[user?.socialRole as keyof typeof socialRoles] || socialRoles.connector;
+
+  const handlePaymentSuccess = (transactionId: string) => {
+    console.log('Payment successful:', transactionId);
+    setShowPayment(false);
+  };
+
+  if (showPayment) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <UPIPayment
+          amount={99}
+          onPaymentSuccess={handlePaymentSuccess}
+          onCancel={() => setShowPayment(false)}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Profile Header */}
-      <Card className="twitter-card p-6">
+    <div className="max-w-4xl mx-auto p-4 space-y-6">
+      {/* Profile Header - Gen Z Style */}
+      <Card className="bg-gradient-to-br from-primary/20 to-purple-600/20 p-6 border-primary/30">
         <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
           <div className="relative">
-            <div className="w-24 h-24 bg-gradient-to-br from-red-600 to-red-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-              JD
+            <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+              {user?.name?.[0] || 'U'}
             </div>
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-black flex items-center justify-center">
-              <span className="text-xs">🔥</span>
+            <div className="absolute -bottom-2 -right-2 text-2xl">
+              {currentRole.emoji}
             </div>
           </div>
           
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-2xl font-bold text-white">John Doe</h1>
-            <p className="text-gray-400 mb-2">@johndoe • Senior at NYU</p>
+            <h1 className="text-2xl font-bold">{user?.name}</h1>
+            <p className="text-muted-foreground mb-2">{user?.username}</p>
             
-            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-              <Badge className="badge-glow">Level 8 Host</Badge>
-              <Badge variant="outline" className="border-red-600 text-red-600">VIP Member</Badge>
-              <Badge variant="outline" className="border-yellow-500 text-yellow-500">15-day Streak 🔥</Badge>
-            </div>
+            <Badge className={`${currentRole.color} text-white mb-3`}>
+              {currentRole.emoji} {currentRole.name}
+            </Badge>
+            
+            <p className="text-sm text-muted-foreground mb-4">{currentRole.description}</p>
 
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <div className="profile-stat">
-                <div className="text-2xl font-bold text-red-500">2,847</div>
-                <div className="text-xs text-gray-400">Total Points</div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">2.8K</div>
+                <div className="text-xs text-muted-foreground">Vibe Points</div>
               </div>
-              <div className="profile-stat">
+              <div className="text-center">
                 <div className="text-2xl font-bold text-blue-500">23</div>
-                <div className="text-xs text-gray-400">Events Hosted</div>
+                <div className="text-xs text-muted-foreground">Events</div>
               </div>
-              <div className="profile-stat">
+              <div className="text-center">
                 <div className="text-2xl font-bold text-green-500">156</div>
-                <div className="text-xs text-gray-400">Events Joined</div>
+                <div className="text-xs text-muted-foreground">Connections</div>
               </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-4">
-              {socialLinks.map((social, index) => (
-                <Button key={index} variant="outline" size="sm" className="border-gray-600">
-                  <social.icon className={`w-4 h-4 mr-2 ${social.color}`} />
-                  {social.handle}
-                  <ExternalLink className="w-3 h-3 ml-1" />
-                </Button>
-              ))}
             </div>
           </div>
           
           <div className="flex flex-col space-y-2">
-            <Button className="bg-red-600 hover:bg-red-700">
-              <QrCode className="w-4 h-4 mr-2" />
-              My QR Code
-            </Button>
-            <Button variant="outline" className="border-red-600 text-red-600">
+            <Button className="bg-primary hover:bg-primary/90">
+              <Share className="w-4 h-4 mr-2" />
               Share Profile
+            </Button>
+            <Button variant="outline">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
             </Button>
           </div>
         </div>
       </Card>
 
-      {/* Badges */}
-      <Card className="twitter-card p-6">
-        <h2 className="text-xl font-bold mb-4 flex items-center">
-          <Trophy className="w-5 h-5 text-yellow-500 mr-2" />
-          Achievement Badges
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {badges.map((badge, index) => (
-            <div key={index} className="text-center p-4 bg-secondary/30 rounded-xl hover:bg-secondary/50 transition-all">
-              <div className="text-3xl mb-2">{badge.icon}</div>
-              <h3 className="font-semibold text-sm">{badge.name}</h3>
-              <p className="text-xs text-gray-400 mt-1">{badge.description}</p>
+      {/* Role Progress */}
+      <Card className="p-6">
+        <h3 className="font-bold mb-4 flex items-center">
+          <Crown className="w-5 h-5 text-yellow-500 mr-2" />
+          Role Progress
+        </h3>
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-medium">Level Progress</span>
+              <span className="text-sm text-muted-foreground">Level 5</span>
             </div>
-          ))}
+            <div className="w-full bg-secondary rounded-full h-3">
+              <div className="bg-gradient-to-r from-primary to-purple-600 h-3 rounded-full w-3/4"></div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">{currentRole.nextLevel}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {currentRole.achievements.map((achievement, index) => (
+              <div key={index} className="flex items-center space-x-2 p-2 bg-secondary/50 rounded-lg">
+                <Trophy className="w-4 h-4 text-yellow-500" />
+                <span className="text-sm">{achievement}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
 
-      {/* Main Tabs */}
+      {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 bg-secondary">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="investments">Investments</TabsTrigger>
-          <TabsTrigger value="memories">Memories</TabsTrigger>
-          <TabsTrigger value="qr">QR & Check-in</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-secondary">
+          <TabsTrigger value="overview">Vibes</TabsTrigger>
+          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          {/* Recent Activity */}
-          <Card className="twitter-card p-6">
-            <h3 className="text-lg font-bold mb-4">Recent Activity</h3>
+        <TabsContent value="overview" className="space-y-4">
+          <Card className="p-6">
+            <h3 className="font-bold mb-4">Recent Vibes</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg">
                 <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                  <Trophy className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="font-medium">Earned "Party Wizard" badge</p>
-                  <p className="text-sm text-gray-400">2 hours ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <Users className="w-4 h-4 text-white" />
+                  🎉
                 </div>
                 <div>
                   <p className="font-medium">Hosted "Rooftop Chill Session"</p>
-                  <p className="text-sm text-gray-400">Yesterday</p>
+                  <p className="text-sm text-muted-foreground">2 hours ago • 34 people joined</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg">
+                <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                  🎵
+                </div>
+                <div>
+                  <p className="font-medium">Created "Late Night Vibes" playlist</p>
+                  <p className="text-sm text-muted-foreground">Yesterday • 156 likes</p>
                 </div>
               </div>
             </div>
           </Card>
         </TabsContent>
 
-        <TabsContent value="investments" className="space-y-6">
-          <Card className="twitter-card p-6">
-            <h3 className="text-lg font-bold mb-4 flex items-center">
-              <DollarSign className="w-5 h-5 text-green-500 mr-2" />
-              Investment Portfolio
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="profile-stat">
-                <div className="text-2xl font-bold text-green-500">$687</div>
-                <div className="text-xs text-gray-400">Total Returns</div>
+        <TabsContent value="achievements" className="space-y-4">
+          <Card className="p-6">
+            <h3 className="font-bold mb-4">Your Achievements</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                <div className="text-3xl mb-2">🏆</div>
+                <h4 className="font-semibold text-sm">Event Master</h4>
+                <p className="text-xs text-muted-foreground">Hosted 10+ events</p>
               </div>
-              <div className="profile-stat">
-                <div className="text-2xl font-bold text-blue-500">$500</div>
-                <div className="text-xs text-gray-400">Invested</div>
+              <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                <div className="text-3xl mb-2">🔥</div>
+                <h4 className="font-semibold text-sm">Vibe Creator</h4>
+                <p className="text-xs text-muted-foreground">Created viral moments</p>
               </div>
-              <div className="profile-stat">
-                <div className="text-2xl font-bold text-yellow-500">+37.4%</div>
-                <div className="text-xs text-gray-400">Average ROI</div>
+              <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                <div className="text-3xl mb-2">💎</div>
+                <h4 className="font-semibold text-sm">Community Gem</h4>
+                <p className="text-xs text-muted-foreground">Loved by everyone</p>
               </div>
             </div>
-            
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="payments" className="space-y-4">
+          <Card className="p-6">
+            <h3 className="font-bold mb-4">Payment Methods</h3>
             <div className="space-y-4">
-              {investments.map((investment, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">₹</span>
+                  </div>
                   <div>
-                    <p className="font-semibold">{investment.event}</p>
-                    <p className="text-sm text-gray-400">Invested: ${investment.invested}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">
-                      {investment.returns > 0 ? `$${investment.returns}` : 'Pending'}
-                    </p>
-                    <p className={`text-sm ${investment.status === 'completed' ? 'text-green-500' : 'text-yellow-500'}`}>
-                      {investment.roi}
-                    </p>
+                    <p className="font-medium">UPI Payment</p>
+                    <p className="text-sm text-muted-foreground">Pay with any UPI app</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="memories" className="space-y-6">
-          <Card className="twitter-card p-6">
-            <h3 className="text-lg font-bold mb-4 flex items-center">
-              <Camera className="w-5 h-5 text-purple-500 mr-2" />
-              Event Memories
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recentMemories.map((memory, index) => (
-                <div key={index} className="memory-card">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold">{memory.event}</h4>
-                    <span className="text-sm text-gray-400">{memory.date}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm text-gray-400 mb-3">
-                    <span>{memory.photos} photos</span>
-                    <span>{memory.likes} likes</span>
-                  </div>
-                  <div className="flex items-center space-x-2 mb-3">
-                    {memory.people.map((person, i) => (
-                      <span key={i} className="text-xs bg-red-600/20 text-red-400 px-2 py-1 rounded-full">
-                        {person}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button size="sm" variant="outline" className="flex-1">
-                      <Heart className="w-4 h-4 mr-1" />
-                      Like
-                    </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
-                      <Share className="w-4 h-4 mr-1" />
-                      Share
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="qr" className="space-y-6">
-          <Card className="twitter-card p-6">
-            <h3 className="text-lg font-bold mb-4 flex items-center">
-              <QrCode className="w-5 h-5 text-blue-500 mr-2" />
-              Check-in QR Code
-            </h3>
-            <div className="text-center">
-              <div className="w-48 h-48 bg-white rounded-xl mx-auto mb-4 flex items-center justify-center">
-                <QrCode className="w-32 h-32 text-black" />
+                <Button 
+                  onClick={() => setShowPayment(true)}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
+                  Add UPI
+                </Button>
               </div>
-              <p className="text-gray-400 mb-4">
-                Show this QR code to event hosts for quick check-in
-              </p>
-              <div className="flex space-x-2 justify-center">
-                <Button variant="outline">Save to Photos</Button>
-                <Button className="bg-red-600 hover:bg-red-700">Share QR</Button>
+              
+              <div className="p-4 bg-green-600/10 rounded-lg border border-green-600/30">
+                <h4 className="font-medium text-green-600 mb-2">Premium Features</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Unlimited event hosting</li>
+                  <li>• Advanced analytics</li>
+                  <li>• Priority support</li>
+                  <li>• Custom themes</li>
+                </ul>
+                <Button 
+                  onClick={() => setShowPayment(true)}
+                  className="w-full mt-3 bg-green-600 hover:bg-green-700"
+                >
+                  Upgrade to Premium - ₹99/month
+                </Button>
               </div>
             </div>
           </Card>

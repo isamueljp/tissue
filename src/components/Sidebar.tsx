@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Zap, Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music, Phone } from 'lucide-react';
+import { Users, Home, TrendingUp, MessageSquare, Vote, DollarSign, User, MapPin, Music, Phone } from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -19,10 +19,10 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
+    <div className="fixed left-0 top-0 h-screen w-64 bg-card border-r border-border p-4 hidden lg:block">
       <div className="flex items-center space-x-2 mb-8">
-        <Zap className="w-8 h-8 text-red-600" />
-        <h1 className="text-xl font-bold text-red-600">society6</h1>
+        <Users className="w-8 h-8 text-red-600" />
+        <h1 className="text-xl font-bold text-red-600">commons</h1>
       </div>
       
       <nav className="space-y-2">
@@ -31,7 +31,7 @@ const Sidebar = () => {
             key={item.path}
             to={item.path}
             className={`sidebar-item ${
-              location.pathname === item.path ? 'bg-red-600/20 text-red-600' : 'text-gray-400 hover:text-white'
+              location.pathname === item.path ? 'bg-red-600/20 text-red-600' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             <item.icon className="w-5 h-5" />

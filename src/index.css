@@ -1,11 +1,35 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Society6 Twitter-like Design System - Simplified */
+/* Commons Design System - Dark & Light Theme */
 
 @layer base {
   :root {
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --card: 250 250 250;
+    --card-foreground: 0 0 0;
+    --popover: 250 250 250;
+    --popover-foreground: 0 0 0;
+    --primary: 220 38 38;
+    --primary-foreground: 255 255 255;
+    --secondary: 245 245 245;
+    --secondary-foreground: 64 64 64;
+    --muted: 245 245 245;
+    --muted-foreground: 107 114 128;
+    --accent: 220 38 38;
+    --accent-foreground: 255 255 255;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 229 229 229;
+    --input: 245 245 245;
+    --ring: 220 38 38;
+    --radius: 0.75rem;
+  }
+
+  .dark {
     --background: 0 0 0;
     --foreground: 255 255 255;
     --card: 10 10 10;
@@ -25,7 +49,6 @@
     --border: 30 30 30;
     --input: 25 25 25;
     --ring: 220 38 38;
-    --radius: 0.75rem;
   }
 }
 
@@ -35,7 +58,8 @@
   }
   
   body {
-    @apply bg-black text-white font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
@@ -75,45 +99,46 @@
   .memory-card {
     @apply bg-gradient-to-br from-card to-secondary/50 rounded-xl p-4 border border-border/50;
   }
+
+  /* Mobile-first responsive design */
+  @media (max-width: 768px) {
+    .sidebar-item {
+      @apply p-2 text-sm;
+    }
+    
+    .event-card {
+      @apply p-3;
+    }
+    
+    .profile-stat {
+      @apply p-2;
+    }
+  }
 }
 
-/* Custom animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .grid {
+    @apply gap-3;
+  }
+  
+  .text-2xl {
+    @apply text-xl;
+  }
+  
+  .text-xl {
+    @apply text-lg;
+  }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgb(220 38 38 / 0.3); }
-  50% { box-shadow: 0 0 20px rgb(220 38 38 / 0.6); }
-}
-
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Remove blinking animations - make them static */
-.pulse-glow {
-  box-shadow: 0 0 10px rgb(220 38 38 / 0.4);
-}
-
-.red-glow {
-  box-shadow: 0 0 15px rgb(220 38 38 / 0.3);
-  border: 1px solid rgb(220 38 38 / 0.4);
-}
-
-/* Remove animate-pulse from live badges */
-.live-badge {
-  background: rgb(220 38 38);
-  color: white;
-}
-
-/* Static glow for hot events */
-.event-hot {
-  box-shadow: 0 0 8px rgb(220 38 38 / 0.3);
-  border-color: rgb(220 38 38 / 0.4);
+/* PWA support */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
