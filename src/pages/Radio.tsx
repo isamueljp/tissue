@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Radio, Mic, Users, Volume2, Play, Pause, 
   Heart, Share, Plus, Search, Headphones,
-  Clock, TrendingUp, Star, Settings, Live
+  Clock, TrendingUp, Star, Settings
 } from 'lucide-react';
 
 const RadioPage = () => {

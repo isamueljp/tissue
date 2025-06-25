@@ -171,7 +171,7 @@ const Travel = () => {
               <div className="w-16 h-16 bg-red-600/30 rounded-full flex items-center justify-center mb-2">
                 <Navigation className="w-8 h-8 text-red-400" />
               </div>
-              <Button size="sm" className="bg-red-600 hover:bg-red-700">
+              <Button className="bg-red-600 hover:bg-red-700">
                 Navigate
               </Button>
             </div>
@@ -189,7 +189,7 @@ const Travel = () => {
           <TabsContent value="schedule" className="space-y-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Today's Schedule</h3>
-              <Button variant="outline" size="sm" className="border-red-600/30">
+              <Button variant="outline" className="border-red-600/30">
                 <Calendar className="w-4 h-4 mr-2" />
                 Customize
               </Button>
@@ -237,14 +237,14 @@ const Travel = () => {
                 </div>
 
                 <div className="flex space-x-2">
-                  <Button className="bg-red-600 hover:bg-red-700" size="sm">
+                  <Button className="bg-red-600 hover:bg-red-700">
                     Join Event
                   </Button>
-                  <Button variant="outline" size="sm" className="border-red-600/30">
+                  <Button variant="outline" className="border-red-600/30">
                     <Route className="w-4 h-4 mr-1" />
                     Directions
                   </Button>
-                  <Button variant="outline" size="sm" className="border-red-600/30">
+                  <Button variant="outline" className="border-red-600/30">
                     <Bookmark className="w-4 h-4" />
                   </Button>
                 </div>
@@ -274,7 +274,7 @@ const Travel = () => {
                     <div>
                       <h4 className="font-semibold flex items-center">
                         {person.name}
-                        <Badge className="ml-2 bg-red-600" size="sm">{person.badge}</Badge>
+                        <Badge className="ml-2 bg-red-600">{person.badge}</Badge>
                       </h4>
                       <p className="text-sm text-gray-400">{person.bio}</p>
                       <p className="text-xs text-green-400">{person.availability}</p>
@@ -295,10 +295,10 @@ const Travel = () => {
                     {person.mutualConnections} mutual connections
                   </span>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="border-red-600/30">
+                    <Button variant="outline" className="border-red-600/30">
                       <Heart className="w-4 h-4" />
                     </Button>
-                    <Button className="bg-red-600 hover:bg-red-700" size="sm">
+                    <Button className="bg-red-600 hover:bg-red-700">
                       Connect
                     </Button>
                   </div>
