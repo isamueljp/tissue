@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -207,7 +206,7 @@ const Index = () => {
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S6</span>
+              <span className="text-white font-bold text-lg">⚡</span>
             </div>
             <h1 className="text-xl font-bold text-red-600">society6</h1>
           </div>
@@ -217,7 +216,7 @@ const Index = () => {
               <Heart className="w-4 h-4" />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full"></span>
             </Button>
-            <Button size="sm" className="bg-red-600 hover:bg-red-700 pulse-glow">
+            <Button size="sm" className="bg-red-600 hover:bg-red-700">
               <Sparkles className="w-4 h-4 mr-2" />
               Create
             </Button>
@@ -253,7 +252,47 @@ const Index = () => {
             </div>
           </div>
           <div className="absolute top-2 right-2">
-            <Badge className="bg-red-600 animate-pulse">LIVE</Badge>
+            <Badge className="bg-red-600">LIVE</Badge>
+          </div>
+        </Card>
+
+        {/* Social Energy Map */}
+        <Card className="bg-gradient-to-r from-purple-600/20 to-red-600/20 p-4 border border-purple-600/30">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold flex items-center mb-2">
+                <Navigation className="w-5 h-5 mr-2 text-purple-400" />
+                Social Energy Map
+              </h3>
+              <p className="text-sm text-gray-300">Rooftop 300m away is vibing right now 🔥</p>
+              <p className="text-xs text-gray-400">High energy cluster • 45 people • Live music</p>
+            </div>
+            <div className="text-right">
+              <div className="w-16 h-16 bg-purple-600/30 rounded-full flex items-center justify-center mb-2">
+                <Navigation className="w-8 h-8 text-purple-400" />
+              </div>
+              <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                Navigate
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Social Goals */}
+        <Card className="bg-gradient-to-r from-green-600/20 to-blue-600/20 p-4 border border-green-600/30">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold flex items-center">
+                <Trophy className="w-4 h-4 mr-2 text-green-500" />
+                Social Goals
+              </h3>
+              <p className="text-sm text-gray-300">Meet 5 new people this week</p>
+              <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                <div className="bg-green-500 h-2 rounded-full w-3/5"></div>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">3/5 completed • 2 more to go!</p>
+            </div>
+            <Badge className="bg-green-600">3/5</Badge>
           </div>
         </Card>
 

@@ -133,9 +133,15 @@ const Messages = () => {
         <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold">Messages</h1>
-            <Button size="sm" className="bg-red-600 hover:bg-red-700">
-              <MessageCircle className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button size="sm" variant="ghost" className="relative">
+                <Heart className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full"></span>
+              </Button>
+              <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                <MessageCircle className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
           
           <div className="relative">
@@ -144,6 +150,27 @@ const Messages = () => {
               placeholder="Search conversations..." 
               className="pl-10 bg-secondary border-0 rounded-full"
             />
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex space-x-2 mt-3">
+            <Button size="sm" variant="outline" className="flex-1 border-red-600/30 text-xs">
+              <Users className="w-3 h-3 mr-1" />
+              Groups
+            </Button>
+            <Button size="sm" variant="outline" className="flex-1 border-red-600/30 text-xs">
+              <Zap className="w-3 h-3 mr-1" />
+              Events
+            </Button>
+          </div>
+        </div>
+
+        {/* Live Activity Feed */}
+        <div className="bg-gradient-to-r from-red-600/10 to-transparent p-3 border-b border-border">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-xs font-medium">Live Activity:</span>
+            <span className="text-xs text-gray-300">Sarah joined rooftop party • 3 new messages</span>
           </div>
         </div>
 
@@ -369,6 +396,3 @@ const Messages = () => {
       </div>
     </div>
   );
-};
-
-export default Messages;

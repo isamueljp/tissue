@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -95,4 +94,26 @@
 
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Remove blinking animations - make them static */
+.pulse-glow {
+  box-shadow: 0 0 10px rgb(220 38 38 / 0.4);
+}
+
+.red-glow {
+  box-shadow: 0 0 15px rgb(220 38 38 / 0.3);
+  border: 1px solid rgb(220 38 38 / 0.4);
+}
+
+/* Remove animate-pulse from live badges */
+.live-badge {
+  background: rgb(220 38 38);
+  color: white;
+}
+
+/* Static glow for hot events */
+.event-hot {
+  box-shadow: 0 0 8px rgb(220 38 38 / 0.3);
+  border-color: rgb(220 38 38 / 0.4);
 }
