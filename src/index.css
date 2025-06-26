@@ -39,6 +39,8 @@
     @apply bg-black text-white font-sans antialiased;
     /* Mobile-first responsive font scaling */
     font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   @media (min-width: 768px) {
@@ -63,7 +65,7 @@
   }
   
   .sidebar-item {
-    @apply flex items-center space-x-3 p-3 rounded-xl hover:bg-secondary/50 transition-all duration-200;
+    @apply flex items-center space-x-3 p-3 rounded-xl hover:bg-secondary/50 transition-all duration-200 cursor-pointer;
   }
   
   .event-card {
@@ -118,6 +120,32 @@
   
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Navigation drawer */
+  .nav-drawer {
+    @apply fixed inset-0 z-50 bg-black/95 backdrop-blur-md transform transition-transform duration-300 ease-in-out;
+  }
+  
+  .nav-drawer-open {
+    @apply translate-x-0;
+  }
+  
+  .nav-drawer-closed {
+    @apply -translate-x-full;
+  }
+
+  /* Mobile-optimized button styles */
+  .mobile-btn {
+    @apply px-4 py-2 rounded-xl font-medium transition-all duration-200 touch-target;
+  }
+  
+  .mobile-btn-primary {
+    @apply bg-red-600 hover:bg-red-700 text-white;
+  }
+  
+  .mobile-btn-secondary {
+    @apply bg-secondary hover:bg-secondary/80 text-white;
   }
 
   /* Responsive text sizes */
@@ -195,4 +223,14 @@
 /* Bottom navigation safe area */
 .bottom-nav-safe {
   padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+/* Mobile-first page container */
+.mobile-container {
+  @apply min-h-screen bg-black text-white pb-20;
+}
+
+/* Mobile header */
+.mobile-header {
+  @apply sticky top-0 z-40 bg-black/95 backdrop-blur-md border-b border-border px-4 py-3 safe-area-top;
 }
