@@ -1,24 +1,13 @@
 
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import Header from './Header';
-import { useAuth } from '@/contexts/AuthContext';
 
 const MainLayout = () => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return null;
-  }
-
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-black text-white">
       <Sidebar />
-      <div className="flex-1 lg:ml-64">
-        <Header />
-        <main className="pb-16 lg:pb-0">
-          <Outlet />
-        </main>
+      <div className="flex-1 ml-64">
+        <Outlet />
       </div>
     </div>
   );
