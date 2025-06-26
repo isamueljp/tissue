@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import NavigationDrawer from '../components/NavigationDrawer';
 import { 
   Search, MapPin, Users, Heart, MessageCircle, Share, 
   Zap, Music, Trophy, Gift, Sparkles, Play, Volume2,
@@ -75,12 +76,7 @@ const Index = () => {
       {/* Mobile-optimized Header */}
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            <h1 className="text-xl font-bold text-red-600">society6</h1>
-          </div>
+          <NavigationDrawer />
           
           <div className="flex items-center space-x-2">
             <Button size="sm" variant="ghost" className="relative p-2">
@@ -123,7 +119,7 @@ const Index = () => {
             { icon: Zap, label: 'Host', color: 'bg-red-600' },
             { icon: Users, label: 'Find', color: 'bg-blue-600' },
             { icon: Music, label: 'Vibe', color: 'bg-purple-600' },
-            { icon: Trophy, label: 'Rank', color: 'bg-yellow-600' }
+            { icon: Trophy, label: 'Rank', color: 'bg-red-500' }
           ].map((action, index) => (
             <Card key={index} className="p-3 text-center hover:scale-105 transition-all cursor-pointer">
               <div className={`w-10 h-10 ${action.color} rounded-full flex items-center justify-center mx-auto mb-2`}>
