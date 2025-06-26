@@ -11,7 +11,7 @@ import {
   MessageCircle, Share, Trophy, Gift, Sparkles,
   Bookmark, Timer, Navigation, Volume2, Play,
   UserPlus, Flame, Eye, ChevronLeft, ChevronRight,
-  Mic, Video, Zap
+  Mic, Video, Zap, Home, MessageSquare, User
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
