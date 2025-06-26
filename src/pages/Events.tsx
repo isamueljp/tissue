@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Search, Filter, MapPin, Clock, Users, 
   Heart, Share, Plus, Calendar, Zap,
@@ -82,151 +83,161 @@ const Events = () => {
   ];
 
   return (
-    <div className="mobile-container">
-      <div className="p-4 space-y-4">
+    <div className="min-h-screen bg-black text-white p-4">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-red-600">Events</h1>
-            <p className="text-gray-400 text-sm">Discover amazing experiences</p>
+            <h1 className="text-3xl font-bold text-red-600">Events</h1>
+            <p className="text-gray-400">Discover and join amazing experiences</p>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" className="border-red-600/30">
-              <Filter className="w-4 h-4" />
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" className="border-red-600/30">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
             </Button>
-            <Button size="sm" className="mobile-btn mobile-btn-primary">
-              <Plus className="w-4 h-4 mr-1" />
-              Create
+            <Button className="bg-red-600 hover:bg-red-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Event
             </Button>
           </div>
         </div>
 
-        {/* Search & Filters */}
-        <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input 
-              placeholder="Search events..." 
-              className="pl-10 bg-secondary/50 border-0 rounded-full"
-            />
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {['Party', 'Music', 'Food', 'Study', 'Sports'].map((tag) => (
-              <Badge key={tag} variant="outline" className="cursor-pointer hover:bg-red-600/20 border-red-600/30 touch-target">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Events List */}
-        <div className="space-y-4">
-          {events.map((event) => (
-            <Card 
-              key={event.id} 
-              className="twitter-card hover:border-red-600/40 touch-feedback"
-              onClick={() => setSelectedEvent(event.id)}
-            >
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-600/30 to-purple-600/30 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    {event.image}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-bold mb-1">{event.title}</h3>
-                    <div className="flex items-center space-x-3 text-xs text-gray-400 mb-2">
-                      <span className="flex items-center">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {event.date}
-                      </span>
-                      <span className="flex items-center">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {event.time}
-                      </span>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Events List */}
+          <div className="lg:col-span-2 space-y-4">
+            {events.map((event) => (
+              <Card 
+                key={event.id} 
+                className="event-card bg-card border border-border p-6 hover:border-red-600/40"
+                onClick={() => setSelectedEvent(event.id)}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-600/30 to-purple-600/30 rounded-xl flex items-center justify-center text-2xl">
+                      {event.image}
                     </div>
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="flex items-center text-xs text-gray-400">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        {event.location}
-                      </span>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+                      <div className="flex items-center space-x-4 text-sm text-gray-400">
+                        <span className="flex items-center">
+                          <Calendar className="w-4 h-4 mr-1" />
+                          {event.date}
+                        </span>
+                        <span className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {event.time}
+                        </span>
+                        <span className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {event.location}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-lg font-bold text-green-400">₹{event.price}</div>
-                    <Badge className="bg-red-600 text-xs">
-                      {event.type}
-                    </Badge>
+                  
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-400">${event.price}</div>
+                    <p className="text-sm text-gray-400">per person</p>
                   </div>
                 </div>
 
-                <p className="text-gray-300 text-sm">{event.description}</p>
+                <p className="text-gray-300 mb-4">{event.description}</p>
 
-                <div className="flex items-center justify-between pt-2 border-t border-border">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <span className="flex items-center text-xs">
-                      <Users className="w-3 h-3 mr-1" />
+                    <span className="flex items-center text-sm">
+                      <Users className="w-4 h-4 mr-1" />
                       {event.attendees}/{event.maxAttendees}
                     </span>
+                    <Badge className="bg-red-600">
+                      {event.type}
+                    </Badge>
                     <div className="flex items-center space-x-1">
-                      <Zap className="w-3 h-3 text-red-500" />
-                      <span className="text-xs font-medium">{event.hypeLevel}%</span>
+                      <Zap className="w-4 h-4 text-yellow-500" />
+                      <span className="text-sm font-medium">{event.hypeLevel}% Hype</span>
                     </div>
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm" className="p-2 touch-target">
+                    <Button variant="ghost" size="sm">
                       <Heart className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="p-2 touch-target">
+                    <Button variant="ghost" size="sm">
                       <Share className="w-4 h-4" />
                     </Button>
-                    <Button className="mobile-btn mobile-btn-primary text-xs">
-                      Join
+                    <Button className="bg-red-600 hover:bg-red-700">
+                      Join Event
                     </Button>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* Selected Event Components */}
-        {selectedEvent && (
-          <div className="space-y-4">
-            <WalkieTalkie 
-              eventId={selectedEvent}
-              eventName={events.find(e => e.id === selectedEvent)?.title || 'Event'}
-            />
-            <ContributionBoard 
-              eventTitle={events.find(e => e.id === selectedEvent)?.title || 'Event'}
-            />
-          </div>
-        )}
-
-        {/* Trending Events */}
-        <Card className="twitter-card">
-          <h3 className="font-semibold mb-3 flex items-center">
-            <Star className="w-5 h-5 mr-2 text-red-500" />
-            Trending Now
-          </h3>
-          <div className="space-y-3">
-            {[
-              { name: 'Silent Disco', attendees: 156, emoji: '🎧' },
-              { name: 'Food Truck Festival', attendees: 203, emoji: '🚚' },
-              { name: 'Art Gallery Opening', attendees: 89, emoji: '🎨' }
-            ].map((trend, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">{trend.emoji}</span>
-                  <span className="text-sm">{trend.name}</span>
-                </div>
-                <span className="text-xs text-gray-400">{trend.attendees} going</span>
-              </div>
+              </Card>
             ))}
           </div>
-        </Card>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Search & Quick Filters */}
+            <Card className="bg-card border border-border p-4">
+              <div className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input 
+                    placeholder="Search events..." 
+                    className="pl-10 bg-secondary border-0"
+                  />
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {['Party', 'Music', 'Food', 'Study', 'Sports'].map((tag) => (
+                    <Badge key={tag} variant="outline" className="cursor-pointer hover:bg-red-600/20 border-red-600/30">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </Card>
+
+            {/* Walkie-Talkie for Selected Event */}
+            {selectedEvent && (
+              <WalkieTalkie 
+                eventId={selectedEvent}
+                eventName={events.find(e => e.id === selectedEvent)?.title || 'Event'}
+              />
+            )}
+
+            {/* Event Contributions */}
+            {selectedEvent && (
+              <ContributionBoard 
+                eventTitle={events.find(e => e.id === selectedEvent)?.title || 'Event'}
+              />
+            )}
+
+            {/* Trending Events */}
+            <Card className="bg-card border border-border p-4">
+              <h3 className="font-semibold mb-4 flex items-center">
+                <Star className="w-5 h-5 mr-2 text-yellow-500" />
+                Trending Now
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { name: 'Silent Disco', attendees: 156, emoji: '🎧' },
+                  { name: 'Food Truck Festival', attendees: 203, emoji: '🚚' },
+                  { name: 'Art Gallery Opening', attendees: 89, emoji: '🎨' }
+                ].map((trend, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg">{trend.emoji}</span>
+                      <span className="text-sm">{trend.name}</span>
+                    </div>
+                    <span className="text-xs text-gray-400">{trend.attendees} going</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

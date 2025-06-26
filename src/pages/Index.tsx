@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import NavigationDrawer from '../components/NavigationDrawer';
 import { 
   Search, MapPin, Users, Heart, MessageCircle, Share, 
   Zap, Music, Trophy, Gift, Sparkles, Play, Volume2,
-  ChevronLeft, ChevronRight, Navigation, Plus
+  ChevronLeft, ChevronRight, Navigation
 } from 'lucide-react';
 
 const Index = () => {
@@ -71,9 +72,27 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="mobile-container">
+    <div className="min-h-screen bg-black text-white">
+      {/* Mobile-optimized Header */}
+      <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-border px-4 py-3">
+        <div className="flex items-center justify-between">
+          <NavigationDrawer />
+          
+          <div className="flex items-center space-x-2">
+            <Button size="sm" variant="ghost" className="relative p-2">
+              <Heart className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full"></span>
+            </Button>
+            <Button size="sm" className="bg-red-600 hover:bg-red-700 px-3">
+              <Sparkles className="w-4 h-4 mr-1" />
+              Create
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-lg mx-auto p-4 space-y-4">
-        {/* Tonight's Vibe Banner */}
+        {/* Tonight's Vibe Banner - Twitter-like */}
         <Card className={`p-4 ${tonightsVibes[trendingIndex].background} border-red-600/30 relative`}>
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -85,7 +104,7 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Search Bar */}
+        {/* Search Bar - Twitter-style */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input 
@@ -94,15 +113,15 @@ const Index = () => {
           />
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions - Mobile Grid */}
         <div className="grid grid-cols-4 gap-3">
           {[
-            { icon: Plus, label: 'Host', color: 'bg-red-600' },
+            { icon: Zap, label: 'Host', color: 'bg-red-600' },
             { icon: Users, label: 'Find', color: 'bg-blue-600' },
             { icon: Music, label: 'Vibe', color: 'bg-purple-600' },
-            { icon: Trophy, label: 'Rank', color: 'bg-green-600' }
+            { icon: Trophy, label: 'Rank', color: 'bg-red-500' }
           ].map((action, index) => (
-            <Card key={index} className="p-3 text-center hover:scale-105 transition-all cursor-pointer touch-feedback">
+            <Card key={index} className="p-3 text-center hover:scale-105 transition-all cursor-pointer">
               <div className={`w-10 h-10 ${action.color} rounded-full flex items-center justify-center mx-auto mb-2`}>
                 <action.icon className="w-5 h-5 text-white" />
               </div>
@@ -111,11 +130,11 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Event Feed */}
+        {/* Event Feed - Twitter-like Posts */}
         <div className="space-y-4">
           {events.map((event) => (
-            <Card key={event.id} className="twitter-card">
-              <div className="space-y-3">
+            <Card key={event.id} className="bg-card border border-border hover:border-red-600/30 transition-all">
+              <div className="p-4 space-y-3">
                 {/* Post Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
@@ -156,23 +175,23 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Actions */}
+                {/* Actions - Twitter-style */}
                 <div className="flex items-center justify-between pt-3 border-t border-border">
                   <div className="flex items-center space-x-6">
-                    <Button size="sm" variant="ghost" className="flex items-center space-x-1 text-gray-400 hover:text-red-400 p-2 touch-target">
+                    <Button size="sm" variant="ghost" className="flex items-center space-x-1 text-gray-400 hover:text-red-400 p-2">
                       <Heart className="w-4 h-4" />
                       <span className="text-xs">{Math.floor(Math.random() * 20) + 5}</span>
                     </Button>
-                    <Button size="sm" variant="ghost" className="flex items-center space-x-1 text-gray-400 hover:text-blue-400 p-2 touch-target">
+                    <Button size="sm" variant="ghost" className="flex items-center space-x-1 text-gray-400 hover:text-blue-400 p-2">
                       <MessageCircle className="w-4 h-4" />
                       <span className="text-xs">{Math.floor(Math.random() * 10) + 2}</span>
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-green-400 p-2 touch-target">
+                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-green-400 p-2">
                       <Share className="w-4 h-4" />
                     </Button>
                   </div>
                   
-                  <Button size="sm" className="mobile-btn mobile-btn-primary">
+                  <Button size="sm" className="bg-red-600 hover:bg-red-700 text-xs px-3 py-1">
                     Join
                   </Button>
                 </div>
@@ -183,7 +202,7 @@ const Index = () => {
 
         {/* Load More */}
         <div className="text-center py-4">
-          <Button variant="outline" className="border-red-600/30 hover:border-red-600 text-sm mobile-btn">
+          <Button variant="outline" className="border-red-600/30 hover:border-red-600 text-sm">
             Load more vibes
           </Button>
         </div>
