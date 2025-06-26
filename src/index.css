@@ -1,8 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Society6 Twitter-like Design System - Simplified */
+/* Society6 Mobile-First Design System */
 
 @layer base {
   :root {
@@ -36,12 +37,25 @@
   
   body {
     @apply bg-black text-white font-sans antialiased;
+    /* Mobile-first responsive font scaling */
+    font-size: 14px;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 16px;
+    }
   }
 }
 
 @layer utilities {
-  .twitter-card {
+  /* Mobile-optimized components */
+  .mobile-card {
     @apply bg-card border border-border hover:border-red-600/30 transition-all duration-300 rounded-xl;
+  }
+  
+  .twitter-card {
+    @apply bg-card border border-border hover:border-red-600/30 transition-all duration-300 rounded-xl p-4;
   }
   
   .red-glow {
@@ -75,45 +89,110 @@
   .memory-card {
     @apply bg-gradient-to-br from-card to-secondary/50 rounded-xl p-4 border border-border/50;
   }
+
+  /* Mobile touch targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Mobile-friendly scrolling */
+  .mobile-scroll {
+    @apply overflow-x-auto scrollbar-hide;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbar for mobile */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile safe areas */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Responsive text sizes */
+  .text-mobile-xs { @apply text-xs; }
+  .text-mobile-sm { @apply text-sm; }
+  .text-mobile-base { @apply text-base; }
+  .text-mobile-lg { @apply text-lg; }
+  .text-mobile-xl { @apply text-xl; }
+
+  @media (min-width: 768px) {
+    .text-mobile-xs { @apply text-sm; }
+    .text-mobile-sm { @apply text-base; }
+    .text-mobile-base { @apply text-lg; }
+    .text-mobile-lg { @apply text-xl; }
+    .text-mobile-xl { @apply text-2xl; }
+  }
 }
 
-/* Custom animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+/* Custom animations - optimized for mobile */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgb(220 38 38 / 0.3); }
-  50% { box-shadow: 0 0 20px rgb(220 38 38 / 0.6); }
+  0%, 100% { 
+    box-shadow: 0 0 5px rgb(220 38 38 / 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 15px rgb(220 38 38 / 0.5); 
+  }
 }
 
-.float-animation {
-  animation: float 3s ease-in-out infinite;
+.fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
 }
 
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Remove blinking animations - make them static */
-.pulse-glow {
-  box-shadow: 0 0 10px rgb(220 38 38 / 0.4);
+/* Mobile-optimized hover states */
+@media (hover: hover) {
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
 }
 
-.red-glow {
-  box-shadow: 0 0 15px rgb(220 38 38 / 0.3);
-  border: 1px solid rgb(220 38 38 / 0.4);
+/* Touch feedback for mobile */
+.touch-feedback:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
 }
 
-/* Remove animate-pulse from live badges */
-.live-badge {
-  background: rgb(220 38 38);
-  color: white;
+/* Remove animations on mobile for better performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-/* Static glow for hot events */
-.event-hot {
-  box-shadow: 0 0 8px rgb(220 38 38 / 0.3);
-  border-color: rgb(220 38 38 / 0.4);
+/* Mobile keyboard handling */
+.keyboard-avoid {
+  padding-bottom: env(keyboard-inset-height, 0px);
+}
+
+/* Bottom navigation safe area */
+.bottom-nav-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
 }
