@@ -27,7 +27,7 @@ const Header = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
               <Zap className="w-6 h-6 text-white font-bold" />
             </div>
-            <h1 className="text-2xl font-bold text-gradient-red">society6</h1>
+            <h1 className="text-2xl font-bold text-gradient-red">tissue</h1>
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">

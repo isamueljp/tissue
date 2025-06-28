@@ -22,7 +22,7 @@ const Sidebar = () => {
     <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
       <div className="flex items-center space-x-2 mb-8">
         <Zap className="w-8 h-8 text-red-600" />
-        <h1 className="text-xl font-bold text-red-600">society6</h1>
+        <h1 className="text-xl font-bold text-red-600">tissue</h1>
       </div>
       
       <nav className="space-y-2">
