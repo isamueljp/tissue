@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
 import MainLayout from "./components/MainLayout";
 import Index from "./pages/Index";
 import Events from "./pages/Events";
@@ -21,27 +22,29 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Index />} />
-            <Route path="events" element={<Events />} />
-            <Route path="invest" element={<Invest />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="communities" element={<Communities />} />
-            <Route path="voting" element={<Voting />} />
-            <Route path="travel" element={<Travel />} />
-            <Route path="music" element={<MusicPage />} />
-            <Route path="radio" element={<RadioPage />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Index />} />
+              <Route path="events" element={<Events />} />
+              <Route path="invest" element={<Invest />} />
+              <Route path="messages" element={<Messages />} />
+              <Route path="communities" element={<Communities />} />
+              <Route path="voting" element={<Voting />} />
+              <Route path="travel" element={<Travel />} />
+              <Route path="music" element={<MusicPage />} />
+              <Route path="radio" element={<RadioPage />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
