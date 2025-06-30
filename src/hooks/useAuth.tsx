@@ -10,6 +10,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<any>;
   signUp: (email: string, password: string, fullName?: string) => Promise<any>;
   signInWithGoogle: () => Promise<any>;
+  signInWithInstagram: () => Promise<any>;
   signOut: () => Promise<any>;
 }
 
@@ -21,58 +22,83 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    // Listen for auth changes
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log('Getting session:', session, error);
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
     return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    console.log('Attempting sign in with:', email);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    console.log('Sign in result:', data, error);
     return { data, error };
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    console.log('Attempting sign up with:', email, fullName);
+    const redirectUrl = `${window.location.origin}/`;
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName,
         },
       },
     });
+    console.log('Sign up result:', data, error);
     return { data, error };
   };
 
   const signInWithGoogle = async () => {
+    console.log('Attempting Google sign in');
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}`,
+        redirectTo: `${window.location.origin}/`,
       },
     });
+    console.log('Google sign in result:', data, error);
+    return { data, error };
+  };
+
+  const signInWithInstagram = async () => {
+    console.log('Attempting Instagram sign in');
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'instagram',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+    console.log('Instagram sign in result:', data, error);
     return { data, error };
   };
 
   const signOut = async () => {
+    console.log('Attempting sign out');
     const { error } = await supabase.auth.signOut();
+    console.log('Sign out result:', error);
     return { error };
   };
 
@@ -83,6 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signIn,
     signUp,
     signInWithGoogle,
+    signInWithInstagram,
     signOut,
   };
 

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,13 +20,13 @@ const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const { posts, loading: postsLoading, toggleLike } = usePosts();
 
-  // Stories data (keeping static for now)
+  // Stories data with placeholder fallback
   const stories = [
-    { id: '1', user: 'sarah_vibe', image: '/api/placeholder/60/60', hasUpdate: true, isLive: true },
-    { id: '2', user: 'alex_games', image: '/api/placeholder/60/60', hasUpdate: true, isLive: false },
-    { id: '3', user: 'music_maven', image: '/api/placeholder/60/60', hasUpdate: false, isLive: true },
-    { id: '4', user: 'night_owl', image: '/api/placeholder/60/60', hasUpdate: true, isLive: false },
-    { id: '5', user: 'coffee_crew', image: '/api/placeholder/60/60', hasUpdate: false, isLive: false },
+    { id: '1', user: 'sarah_vibe', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face', hasUpdate: true, isLive: true },
+    { id: '2', user: 'alex_games', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face', hasUpdate: true, isLive: false },
+    { id: '3', user: 'music_maven', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face', hasUpdate: false, isLive: true },
+    { id: '4', user: 'night_owl', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face', hasUpdate: true, isLive: false },
+    { id: '5', user: 'coffee_crew', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&h=60&fit=crop&crop=face', hasUpdate: false, isLive: false },
   ];
 
   const handleCreatePost = () => {
@@ -100,7 +101,15 @@ const Index = () => {
             <div key={story.id} className="flex-shrink-0 relative">
               <div className={`w-16 h-16 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-red-500 to-pink-500' : 'bg-gray-600'}`}>
                 <div className="w-full h-full bg-black rounded-full p-0.5">
-                  <img src={story.image} alt={story.user} className="w-full h-full rounded-full object-cover" />
+                  <img 
+                    src={story.image} 
+                    alt={story.user} 
+                    className="w-full h-full rounded-full object-cover"
+                    onError={(e) => {
+                      console.log('Image failed to load:', story.image);
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${story.user}&background=random`;
+                    }}
+                  />
                 </div>
               </div>
               {story.isLive && (
