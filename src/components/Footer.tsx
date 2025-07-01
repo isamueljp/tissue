@@ -12,7 +12,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
                 <Star className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gradient-gold">Society Six</h3>
+              <h3 className="text-2xl font-bold text-gradient-gold">Four Degree</h3>
             </div>
             <p className="text-muted-foreground mb-4 max-w-md">
               The exclusive social hub where university students create unforgettable experiences, 
@@ -56,7 +56,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Society Six. All rights reserved. Built for students, by students.
+            © 2024 Four Degree. All rights reserved. Built for students, by students.
           </p>
         </div>
       </div>

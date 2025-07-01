@@ -3,10 +3,10 @@ import { CapacitorConfig } from '@capacitor/core';
 
 const config: CapacitorConfig = {
   appId: 'app.lovable.50d4eb7e786a4aa0a5f532be6671530f',
-  appName: 'society6',
+  appName: 'four-degree',
   webDir: 'dist',
   server: {
-    url: 'https://50d4eb7e-786a-4aa0-a5f5-32be6671530f.lovableproject.com?forceHideBadge=true',
+    url: 'https://four-degree.com',
     cleartext: true
   },
   plugins: {

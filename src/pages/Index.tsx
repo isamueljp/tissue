@@ -46,7 +46,7 @@ const Index = () => {
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 bg-red-600 rounded-full animate-pulse mb-4 mx-auto"></div>
-          <p>Loading tissue...</p>
+          <p>Loading four degree...</p>
         </div>
       </div>
     );
@@ -61,7 +61,7 @@ const Index = () => {
             <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-red-600">tissue</h1>
+            <h1 className="text-xl font-bold text-red-600">four degree</h1>
           </div>
           
           <div className="flex items-center space-x-3">
@@ -134,7 +134,7 @@ const Index = () => {
         {/* Posts Feed */}
         {!user && (
           <div className="text-center py-8 space-y-4">
-            <h2 className="text-2xl font-bold">Welcome to tissue</h2>
+            <h2 className="text-2xl font-bold">Welcome to four degree</h2>
             <p className="text-gray-400">Join the community to see posts and connect with others</p>
             <Button onClick={handleLogin} className="bg-red-600 hover:bg-red-700">
               Sign In to Continue
