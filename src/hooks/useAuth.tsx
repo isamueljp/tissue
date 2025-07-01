@@ -87,11 +87,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('Attempting Instagram sign in');
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'instagram' as any, // Type assertion to bypass TypeScript error
+        provider: 'instagram' as any,
         options: {
           redirectTo: `${window.location.origin}/`,
         },
-      });
+      } as any);
       console.log('Instagram sign in result:', data, error);
       return { data, error };
     } catch (err) {
