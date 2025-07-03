@@ -24,10 +24,18 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const { signIn, signUp, signInWithGoogle, signInWithInstagram } = useAuth();
   const { toast } = useToast();
 
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    return password.length >= 6;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
+    if (!email.trim() || !password) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -36,7 +44,25 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       return;
     }
 
-    if (isSignUp && !fullName) {
+    if (!validateEmail(email)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isSignUp && !fullName.trim()) {
       toast({
         title: "Error", 
         description: "Please enter your full name",
@@ -65,13 +91,14 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       } else {
         toast({
           title: "Success",
-          description: isSignUp ? "Account created! Please check your email." : "Welcome back!",
+          description: isSignUp ? "Account created successfully! Please check your email for verification." : "Welcome back!",
         });
         onClose();
         // Clear form
         setEmail('');
         setPassword('');
         setFullName('');
+        setIsSignUp(false);
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -96,6 +123,12 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           description: error.message || "Failed to sign in with Google",
           variant: "destructive",
         });
+      } else {
+        toast({
+          title: "Success",
+          description: "Redirecting to Google sign-in...",
+        });
+        // Don't close modal immediately for OAuth as it redirects
       }
     } catch (error) {
       console.error('Google auth error:', error);
@@ -117,7 +150,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         console.error('Instagram auth error:', error);
         toast({
           title: "Error",
-          description: error.message || "Failed to sign in with Instagram",
+          description: error.message || "Instagram sign-in is not available",
           variant: "destructive",
         });
       }
@@ -125,7 +158,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       console.error('Instagram auth error:', error);
       toast({
         title: "Error",
-        description: "Failed to sign in with Instagram",
+        description: "Instagram sign-in is not available",
         variant: "destructive",
       });
     } finally {
@@ -138,7 +171,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       <DialogContent className="sm:max-w-md bg-black border-border">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center text-white">
-            {isSignUp ? 'Join tissue' : 'Welcome back'}
+            {isSignUp ? 'Join four degree' : 'Welcome back'}
           </DialogTitle>
         </DialogHeader>
         
@@ -232,16 +265,6 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
             Continue with Google
-          </Button>
-          
-          <Button
-            onClick={handleInstagramSignIn}
-            disabled={loading}
-            variant="outline"
-            className="w-full border-border hover:bg-secondary text-white"
-          >
-            <Instagram className="w-5 h-5 mr-2" />
-            Continue with Instagram
           </Button>
         </div>
         

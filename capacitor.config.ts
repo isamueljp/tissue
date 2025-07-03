@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   appName: 'four-degree',
   webDir: 'dist',
   server: {
-    url: 'https://four-degree.com',
+    url: 'https://fourth-degree.com',
     cleartext: true
   },
   plugins: {

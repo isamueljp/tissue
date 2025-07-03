@@ -43,63 +43,136 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const getRedirectUrl = () => {
+    // Use production domain for mobile apps and deployed versions
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname === 'localhost' || hostname.includes('lovableproject.com')) {
+        return `${window.location.origin}/`;
+      }
+    }
+    return 'https://fourth-degree.com/';
+  };
+
   const signIn = async (email: string, password: string) => {
     console.log('Attempting sign in with:', email);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    console.log('Sign in result:', data, error);
-    return { data, error };
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        // Handle specific error cases
+        if (error.message.includes('Invalid login credentials')) {
+          return { data: null, error: { message: 'Invalid email or password. Please check your credentials.' } };
+        }
+        if (error.message.includes('Email not confirmed')) {
+          return { data: null, error: { message: 'Please check your email and click the confirmation link.' } };
+        }
+        return { data: null, error: { message: error.message } };
+      }
+      
+      console.log('Sign in successful:', data);
+      return { data, error: null };
+    } catch (err) {
+      console.error('Unexpected sign in error:', err);
+      return { data: null, error: { message: 'An unexpected error occurred. Please try again.' } };
+    }
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     console.log('Attempting sign up with:', email, fullName);
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName,
+    try {
+      const redirectUrl = getRedirectUrl();
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: fullName?.trim(),
+          },
         },
-      },
-    });
-    console.log('Sign up result:', data, error);
-    return { data, error };
+      });
+      
+      if (error) {
+        console.error('Sign up error:', error);
+        // Handle specific error cases
+        if (error.message.includes('User already registered')) {
+          return { data: null, error: { message: 'An account with this email already exists. Please sign in instead.' } };
+        }
+        if (error.message.includes('Password should be at least')) {
+          return { data: null, error: { message: 'Password must be at least 6 characters long.' } };
+        }
+        return { data: null, error: { message: error.message } };
+      }
+      
+      console.log('Sign up successful:', data);
+      return { data, error: null };
+    } catch (err) {
+      console.error('Unexpected sign up error:', err);
+      return { data: null, error: { message: 'An unexpected error occurred. Please try again.' } };
+    }
   };
 
   const signInWithGoogle = async () => {
     console.log('Attempting Google sign in');
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/`,
-      },
-    });
-    console.log('Google sign in result:', data, error);
-    return { data, error };
+    try {
+      const redirectUrl = getRedirectUrl();
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      
+      if (error) {
+        console.error('Google sign in error:', error);
+        return { data: null, error: { message: 'Failed to sign in with Google. Please try again.' } };
+      }
+      
+      console.log('Google sign in initiated:', data);
+      return { data, error: null };
+    } catch (err) {
+      console.error('Google auth error:', err);
+      return { 
+        data: null, 
+        error: { 
+          message: 'Google authentication failed. Please try again.' 
+        } 
+      };
+    }
   };
 
   const signInWithInstagram = async () => {
     console.log('Attempting Instagram sign in');
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'instagram' as any,
+      const redirectUrl = getRedirectUrl();
+      
+      const { data, error } = await (supabase.auth.signInWithOAuth as any)({
+        provider: 'instagram',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: redirectUrl,
         },
-      } as any);
-      console.log('Instagram sign in result:', data, error);
-      return { data, error };
+      });
+      
+      if (error) {
+        console.error('Instagram sign in error:', error);
+        return { data: null, error: { message: 'Instagram authentication is not configured. Please contact support.' } };
+      }
+      
+      console.log('Instagram sign in initiated:', data);
+      return { data, error: null };
     } catch (err) {
       console.error('Instagram auth error:', err);
       return { 
         data: null, 
         error: { 
-          message: 'Instagram authentication is not configured. Please contact support.' 
+          message: 'Instagram authentication is not available. Please use email or Google sign-in.' 
         } 
       };
     }
@@ -107,9 +180,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     console.log('Attempting sign out');
-    const { error } = await supabase.auth.signOut();
-    console.log('Sign out result:', error);
-    return { error };
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Sign out error:', error);
+        return { error: { message: 'Failed to sign out. Please try again.' } };
+      }
+      console.log('Sign out successful');
+      return { error: null };
+    } catch (err) {
+      console.error('Unexpected sign out error:', err);
+      return { error: { message: 'An unexpected error occurred during sign out.' } };
+    }
   };
 
   const value = {
