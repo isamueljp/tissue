@@ -92,7 +92,7 @@ const Index = () => {
             {user ? <Button size="sm" onClick={handleCreatePost} className="bg-red-600 hover:bg-red-700 px-3">
                 <Plus className="w-4 h-4 mr-1" />
                 Create
-              </Button> : <Button size="sm" onClick={handleLogin} className="bg-red-600 hover:bg-red-700 px-3">
+              </Button> : <Button size="sm" onClick={handleLogin} className="px-3 bg-[#00197e]">
                 Sign In
               </Button>}
           </div>
