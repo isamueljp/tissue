@@ -1,7 +1,5 @@
-
 import { Link, useLocation } from 'react-router-dom';
 import { Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music, Phone } from 'lucide-react';
-
 const Sidebar = () => {
   const location = useLocation();
   const menuItems = [{
@@ -47,8 +45,7 @@ const Sidebar = () => {
   }];
 
   // Premium Four Degree Logo
-  const FourDegreeLogo = () => (
-    <div className="relative group cursor-pointer">
+  const FourDegreeLogo = () => <div className="relative group cursor-pointer">
       {/* Outer premium glow ring */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm opacity-75 group-hover:opacity-100 transition-all duration-500 animate-pulse"></div>
       
@@ -69,16 +66,11 @@ const Sidebar = () => {
       
       {/* Premium status indicator */}
       <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full border border-black shadow-lg"></div>
-    </div>
-  );
-
-  return (
-    <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
+    </div>;
+  return <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
       <div className="flex items-center space-x-3 mb-8 group">
         <FourDegreeLogo />
-        <h1 className="text-2xl font-bold transition-colors duration-300 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-purple-200 group-hover:from-blue-400 group-hover:via-purple-400 group-hover:to-pink-400">
-          four degree
-        </h1>
+        <h1 className="text-2xl font-bold transition-colors duration-300 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-purple-200 group-hover:from-blue-400 group-hover:via-purple-400 group-hover:to-pink-400">fourth degree</h1>
       </div>
       
       <nav className="space-y-2">
@@ -87,8 +79,6 @@ const Sidebar = () => {
             <span>{item.label}</span>
           </Link>)}
       </nav>
-    </div>
-  );
+    </div>;
 };
-
 export default Sidebar;
