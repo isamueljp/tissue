@@ -3,343 +3,365 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { 
-  MapPin, Calendar, Users, Clock, Navigation, 
-  Coffee, Music, Camera, Star, Plus, Search,
-  Compass, Map, Route, Heart, Bookmark
+  Search, MapPin, Plane, Car, Train, Radio, Play, Pause,
+  Volume2, Users, Star, Heart, Share, Clock, Calendar, Music
 } from 'lucide-react';
 
 const Travel = () => {
-  const [selectedCity, setSelectedCity] = useState('New York');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('travel');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentRadio, setCurrentRadio] = useState<string | null>(null);
 
-  const cities = ['New York', 'Los Angeles', 'Chicago', 'Boston', 'San Francisco'];
-
-  const travelSchedule = [
+  const travelSpots = [
     {
       id: '1',
-      time: '9:00 AM',
-      activity: 'Coffee & Networking',
-      location: 'Blue Bottle Coffee - SoHo',
-      type: 'meetup',
-      attendees: 12,
-      description: 'Start your day with great coffee and meet fellow travelers',
-      distance: '0.5 km',
-      vibe: 'chill'
-    },
-    {
-      id: '2', 
-      time: '2:00 PM',
-      activity: 'Central Park Picnic',
-      location: 'Central Park - Sheep Meadow',
-      type: 'event',
-      attendees: 28,
-      description: 'Join locals for a relaxing picnic with music and games',
-      distance: '1.2 km',
-      vibe: 'social'
-    },
-    {
-      id: '3',
-      time: '7:00 PM',
-      activity: 'Rooftop Party',
-      location: 'Manhattan Skyline Rooftop',
-      type: 'party',
-      attendees: 45,
-      description: 'Epic sunset views with DJ sets and craft cocktails',
-      distance: '2.1 km',
-      vibe: 'party'
-    }
-  ];
-
-  const localConnections = [
-    {
-      id: '1',
-      name: 'Sarah Chen',
-      bio: 'Local guide & photographer',
-      interests: ['Photography', 'Food', 'Music'],
-      mutualConnections: 3,
-      badge: 'Local Expert',
-      availability: 'Available today'
+      name: 'Goa Beach Paradise',
+      location: 'Goa, India',
+      price: '₹15,000',
+      duration: '3 days, 2 nights',
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop',
+      rating: 4.8,
+      reviews: 234,
+      tags: ['Beach', 'Party', 'Relaxation'],
+      description: 'Perfect beach getaway with stunning sunsets, water sports, and vibrant nightlife.',
+      host: 'Sarah Chen',
+      travelers: 12,
+      maxTravelers: 20
     },
     {
       id: '2',
-      name: 'Marcus Rodriguez',
-      bio: 'Music producer & party host',
-      interests: ['Music', 'Nightlife', 'Art'],
-      mutualConnections: 7,
-      badge: 'Party Guru',
-      availability: 'Free this evening'
+      name: 'Himalayan Adventure',
+      location: 'Manali, Himachal Pradesh',
+      price: '₹25,000',
+      duration: '5 days, 4 nights',
+      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+      rating: 4.9,
+      reviews: 189,
+      tags: ['Adventure', 'Mountains', 'Trekking'],
+      description: 'Thrilling mountain adventure with trekking, camping, and breathtaking views.',
+      host: 'Alex Rodriguez',
+      travelers: 8,
+      maxTravelers: 15
+    },
+    {
+      id: '3',
+      name: 'Rajasthan Heritage Tour',
+      location: 'Jaipur, Rajasthan',
+      price: '₹20,000',
+      duration: '4 days, 3 nights',
+      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e02?w=400&h=300&fit=crop',
+      rating: 4.7,
+      reviews: 156,
+      tags: ['Culture', 'Heritage', 'Royal'],
+      description: 'Explore magnificent palaces, forts, and rich cultural heritage of the Pink City.',
+      host: 'Maya Patel',
+      travelers: 15,
+      maxTravelers: 25
     }
   ];
 
-  const travelTips = [
+  const radioStations = [
     {
-      title: 'Best Coffee Spots',
-      description: 'Local favorites for remote work and networking',
-      category: 'Food & Drink',
-      rating: 4.8
+      id: 'r1',
+      name: 'Travel Vibes FM',
+      genre: 'Chill & Travel',
+      listeners: 1234,
+      currentSong: 'Wanderlust - Road Trip Mix',
+      duration: '3:45',
+      host: 'DJ Travel',
+      description: 'Perfect soundtrack for your next adventure',
+      cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop',
+      isLive: true
     },
     {
-      title: 'Hidden Speakeasies',
-      description: 'Secret bars only locals know about',
-      category: 'Nightlife',
-      rating: 4.9
+      id: 'r2',
+      name: 'Mountain Echoes',
+      genre: 'Ambient & Nature',
+      listeners: 856,
+      currentSong: 'Himalayan Dawn - Nature Sounds',
+      duration: '5:12',
+      host: 'Echo Master',
+      description: 'Relax with sounds from the mountains',
+      cover: 'https://images.unsplash.com/photo-1464822759844-d150ad6cad0c?w=100&h=100&fit=crop',
+      isLive: true
     },
     {
-      title: 'Rooftop Venues',
-      description: 'Best spots for sunset views and parties',
-      category: 'Events',
-      rating: 4.7
+      id: 'r3',
+      name: 'Beach Waves Radio',
+      genre: 'Tropical & Chill',
+      listeners: 967,
+      currentSong: 'Ocean Breeze - Tropical Mix',
+      duration: '4:23',
+      host: 'Wave Rider',
+      description: 'Feel the ocean breeze wherever you are',
+      cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100&h=100&fit=crop',
+      isLive: true
+    },
+    {
+      id: 'r4',
+      name: 'City Lights FM',
+      genre: 'Urban & Electronic',
+      listeners: 743,
+      currentSong: 'Neon Nights - Electronic Vibes',
+      duration: '3:58',
+      host: 'Night Owl',
+      description: 'Urban beats for city explorers',
+      cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&h=100&fit=crop',
+      isLive: false
     }
   ];
 
-  const getVibeColor = (vibe: string) => {
-    switch (vibe) {
-      case 'chill': return 'text-blue-400';
-      case 'social': return 'text-green-400';
-      case 'party': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
+  const filteredTravelSpots = travelSpots.filter(spot =>
+    spot.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    spot.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    spot.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
-  const getVibeEmoji = (vibe: string) => {
-    switch (vibe) {
-      case 'chill': return '☕';
-      case 'social': return '🤝';
-      case 'party': return '🎉';
-      default: return '📍';
-    }
+  const filteredRadioStations = radioStations.filter(station =>
+    station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    station.genre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    station.host.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const toggleRadio = (radioId: string) => {
+    setCurrentRadio(currentRadio === radioId ? null : radioId);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-red-600">Travel & Explore</h1>
-            <p className="text-gray-400">Discover events, meet locals, and create memories</p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" className="border-red-600/30">
-              <Compass className="w-4 h-4 mr-2" />
-              Find Me
-            </Button>
-            <Button className="bg-red-600 hover:bg-red-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Event
-            </Button>
-          </div>
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Travel & Radio</h1>
+          <p className="text-gray-400">Discover amazing destinations and tune into great music</p>
         </div>
-
-        {/* City Selector */}
-        <div className="mb-6">
-          <div className="flex space-x-2 overflow-x-auto pb-2">
-            {cities.map((city) => (
-              <Button
-                key={city}
-                variant={selectedCity === city ? "default" : "outline"}
-                size="sm"
-                className={`whitespace-nowrap ${
-                  selectedCity === city 
-                    ? 'bg-red-600 hover:bg-red-700' 
-                    : 'border-red-600/30 hover:border-red-600'
-                }`}
-                onClick={() => setSelectedCity(city)}
-              >
-                <MapPin className="w-4 h-4 mr-1" />
-                {city}
-              </Button>
-            ))}
-          </div>
+        <div className="flex items-center space-x-3">
+          <Button className="bg-red-600 hover:bg-red-700">
+            <Plane className="w-4 h-4 mr-2" />
+            Plan Trip
+          </Button>
+          <Button variant="outline" className="border-green-600 text-green-600">
+            <Radio className="w-4 h-4 mr-2" />
+            Start Radio
+          </Button>
         </div>
+      </div>
 
-        {/* Social Energy Compass */}
-        <Card className="bg-gradient-to-r from-red-600/20 to-purple-600/20 p-4 mb-6 border border-red-600/30">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold flex items-center mb-2">
-                <Compass className="w-5 h-5 mr-2 text-red-400" />
-                Social Energy Compass
-              </h3>
-              <p className="text-sm text-gray-300">Rooftop 300m away is vibing right now 🔥</p>
-              <p className="text-xs text-gray-400">45 people, live music, high energy</p>
-            </div>
-            <div className="text-right">
-              <div className="w-16 h-16 bg-red-600/30 rounded-full flex items-center justify-center mb-2">
-                <Navigation className="w-8 h-8 text-red-400" />
-              </div>
-              <Button className="bg-red-600 hover:bg-red-700">
-                Navigate
-              </Button>
-            </div>
-          </div>
-        </Card>
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Input
+          placeholder="Search destinations, radio stations, or genres..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-12 bg-secondary/50 border-0 rounded-full text-lg py-3"
+        />
+      </div>
 
-        <Tabs defaultValue="schedule" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-secondary/50">
-            <TabsTrigger value="schedule">Schedule</TabsTrigger>
-            <TabsTrigger value="people">People</TabsTrigger>
-            <TabsTrigger value="explore">Explore</TabsTrigger>
-            <TabsTrigger value="tips">Tips</TabsTrigger>
-          </TabsList>
+      {/* Main Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2 bg-secondary">
+          <TabsTrigger value="travel">Travel Destinations</TabsTrigger>
+          <TabsTrigger value="radio">Radio Stations</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="schedule" className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Today's Schedule</h3>
-              <Button variant="outline" className="border-red-600/30">
-                <Calendar className="w-4 h-4 mr-2" />
-                Customize
-              </Button>
-            </div>
-
-            {travelSchedule.map((item) => (
-              <Card key={item.id} className="bg-card border border-border p-4 hover:border-red-600/40 transition-all">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-red-600/20 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold">{item.time.split(':')[0]}</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold flex items-center">
-                        {item.activity}
-                        <span className="ml-2 text-lg">{getVibeEmoji(item.vibe)}</span>
-                      </h4>
-                      <p className="text-sm text-gray-400 flex items-center">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        {item.location}
-                      </p>
-                      <p className="text-sm text-gray-300 mt-1">{item.description}</p>
-                    </div>
-                  </div>
-                  <Badge className={`${getVibeColor(item.vibe)} bg-transparent border`}>
-                    {item.vibe}
-                  </Badge>
-                </div>
-
-                <div className="flex items-center justify-between text-sm text-gray-400 mb-3">
-                  <div className="flex items-center space-x-4">
-                    <span className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {item.attendees} going
-                    </span>
-                    <span className="flex items-center">
-                      <Navigation className="w-4 h-4 mr-1" />
-                      {item.distance}
-                    </span>
-                  </div>
-                  <span className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />
-                    {item.time}
-                  </span>
-                </div>
-
-                <div className="flex space-x-2">
-                  <Button className="bg-red-600 hover:bg-red-700">
-                    Join Event
-                  </Button>
-                  <Button variant="outline" className="border-red-600/30">
-                    <Route className="w-4 h-4 mr-1" />
-                    Directions
-                  </Button>
-                  <Button variant="outline" className="border-red-600/30">
-                    <Bookmark className="w-4 h-4" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </TabsContent>
-
-          <TabsContent value="people" className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Connect with Locals</h3>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input 
-                  placeholder="Search people..." 
-                  className="pl-10 bg-secondary border-0 w-64"
-                />
-              </div>
-            </div>
-
-            {localConnections.map((person) => (
-              <Card key={person.id} className="bg-card border border-border p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      {person.name[0]}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold flex items-center">
-                        {person.name}
-                        <Badge className="ml-2 bg-red-600">{person.badge}</Badge>
-                      </h4>
-                      <p className="text-sm text-gray-400">{person.bio}</p>
-                      <p className="text-xs text-green-400">{person.availability}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {person.interests.map((interest, index) => (
-                    <Badge key={index} variant="outline" className="text-xs border-red-600/30">
-                      {interest}
+        <TabsContent value="travel" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTravelSpots.map((spot) => (
+              <Card key={spot.id} className="bg-card border border-border overflow-hidden hover:border-red-600/30 transition-all cursor-pointer group">
+                <div className="relative">
+                  <img 
+                    src={spot.image} 
+                    alt={spot.name}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <Badge className="bg-red-600 text-white">
+                      {spot.duration}
                     </Badge>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">
-                    {person.mutualConnections} mutual connections
-                  </span>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" className="border-red-600/30">
+                  </div>
+                  <div className="absolute top-3 right-3">
+                    <Button variant="ghost" size="sm" className="text-white hover:text-red-500 bg-black/20 backdrop-blur-sm">
                       <Heart className="w-4 h-4" />
                     </Button>
-                    <Button className="bg-red-600 hover:bg-red-700">
-                      Connect
-                    </Button>
+                  </div>
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="flex items-center justify-between text-white">
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                        <span className="text-sm font-medium">{spot.rating}</span>
+                        <span className="text-xs text-gray-300">({spot.reviews})</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-sm">
+                        <Users className="w-4 h-4" />
+                        <span>{spot.travelers}/{spot.maxTravelers}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <h3 className="font-bold text-white group-hover:text-red-400 transition-colors">
+                      {spot.name}
+                    </h3>
+                    <span className="font-bold text-green-500">{spot.price}</span>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-gray-300">
+                    <MapPin className="w-4 h-4 mr-2 text-red-500" />
+                    {spot.location}
+                  </div>
+                  
+                  <p className="text-sm text-gray-400 line-clamp-2">
+                    {spot.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-1">
+                    {spot.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline" className="text-xs border-gray-600 text-gray-400">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <p className="text-xs text-gray-500">by {spot.host}</p>
+                    <div className="flex items-center space-x-2">
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-400">
+                        <Share className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" className="bg-red-600 hover:bg-red-700 text-xs">
+                        Join Trip
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
             ))}
-          </TabsContent>
+          </div>
+        </TabsContent>
 
-          <TabsContent value="explore" className="space-y-4">
-            <div className="text-center py-8">
-              <Map className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Interactive Map</h3>
-              <p className="text-gray-400 mb-4">Explore events and hotspots around you</p>
-              <Button className="bg-red-600 hover:bg-red-700">
-                <MapPin className="w-4 h-4 mr-2" />
-                Open Map View
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="tips" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {travelTips.map((tip, index) => (
-                <Card key={index} className="bg-card border border-border p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold">{tip.title}</h4>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                      <span className="text-sm">{tip.rating}</span>
+        <TabsContent value="radio" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredRadioStations.map((station) => (
+              <Card key={station.id} className="bg-card border border-border p-4 hover:border-green-600/30 transition-all">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <img 
+                        src={station.cover} 
+                        alt={station.name}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                      {station.isLive && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h3 className="font-bold text-white">{station.name}</h3>
+                      <p className="text-sm text-gray-400">{station.genre}</p>
+                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <Users className="w-3 h-3" />
+                        <span>{station.listeners} listening</span>
+                        {station.isLive && (
+                          <Badge className="bg-red-600 text-white text-xs">LIVE</Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-400 mb-3">{tip.description}</p>
-                  <Badge variant="outline" className="border-red-600/30 text-xs">
-                    {tip.category}
-                  </Badge>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-white truncate">
+                          {station.currentSong}
+                        </p>
+                        <p className="text-xs text-gray-400">by {station.host}</p>
+                      </div>
+                      <span className="text-xs text-gray-500">{station.duration}</span>
+                    </div>
+                    
+                    <p className="text-xs text-gray-400">{station.description}</p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <div className="flex items-center space-x-2">
+                      <Button 
+                        size="sm" 
+                        onClick={() => toggleRadio(station.id)}
+                        className={`${
+                          currentRadio === station.id 
+                            ? 'bg-red-600 hover:bg-red-700' 
+                            : 'bg-green-600 hover:bg-green-700'
+                        }`}
+                      >
+                        {currentRadio === station.id ? (
+                          <Pause className="w-4 h-4" />
+                        ) : (
+                          <Play className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-green-400">
+                        <Volume2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center space-x-1">
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-400">
+                        <Heart className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-400">
+                        <Share className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          
+          {/* Now Playing Bar */}
+          {currentRadio && (
+            <Card className="fixed bottom-4 left-4 right-4 bg-card border border-border p-4 backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                    <Music className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">
+                      {radioStations.find(s => s.id === currentRadio)?.name}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {radioStations.find(s => s.id === currentRadio)?.currentSong}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm">
+                    <Volume2 className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    onClick={() => setCurrentRadio(null)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    <Pause className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

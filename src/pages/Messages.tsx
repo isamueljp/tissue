@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Search, MessageCircle, Users, Phone, Video, 
   Hash, Send, Smile, Mic, MoreVertical,
-  Radio, Zap, Heart, Gift
+  Zap, Heart, Gift, Calendar
 } from 'lucide-react';
 
 const Messages = () => {
@@ -64,7 +64,7 @@ const Messages = () => {
       id: 'c2',
       name: 'Gaming Tournament',
       description: 'Jan 5 • 32 members',
-      lastMessage: 'Prize pool updated: $500!',
+      lastMessage: 'Prize pool updated: ₹50,000!',
       time: '20m ago',
       unread: 1,
       isLive: false,
@@ -82,24 +82,43 @@ const Messages = () => {
     }
   ];
 
-  const radioChannels = [
+  const eventChats = [
     {
-      id: 'r1',
-      name: 'Late Night Vibes',
-      listeners: 23,
-      currentSong: 'Lo-fi Hip Hop',
-      isLive: true
+      id: 'e1',
+      name: 'Tech Conference 2025',
+      description: 'Jan 15-17 • 120 attendees',
+      lastMessage: 'Schedule update: Keynote moved to 10 AM',
+      time: '10m ago',
+      unread: 5,
+      isLive: true,
+      avatar: '💻',
+      isInviteOnly: true
     },
     {
-      id: 'r2',
-      name: 'Party Prep Radio',
-      listeners: 15,
-      currentSong: 'Electronic Mix',
-      isLive: true
+      id: 'e2',
+      name: 'Music Festival Planning',
+      description: 'Feb 20 • 80 members',
+      lastMessage: 'Artist lineup announcement tomorrow!',
+      time: '30m ago',
+      unread: 2,
+      isLive: true,
+      avatar: '🎵',
+      isInviteOnly: true
+    },
+    {
+      id: 'e3',
+      name: 'Startup Pitch Night',
+      description: 'Jan 25 • 50 entrepreneurs',
+      lastMessage: 'Registration closes in 3 days',
+      time: '1h ago',
+      unread: 0,
+      isLive: false,
+      avatar: '🚀',
+      isInviteOnly: false
     }
   ];
 
-  const currentChat = [...directMessages, ...communityChats].find(chat => chat.id === selectedChat);
+  const currentChat = [...directMessages, ...communityChats, ...eventChats].find(chat => chat.id === selectedChat);
 
   const chatMessages = [
     {
@@ -168,9 +187,9 @@ const Messages = () => {
         {/* Live Activity Feed */}
         <div className="bg-gradient-to-r from-red-600/10 to-transparent p-3 border-b border-border">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-xs font-medium">Live Activity:</span>
-            <span className="text-xs text-gray-300">Sarah joined rooftop party • 3 new messages</span>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-xs font-medium">Live:</span>
+            <span className="text-xs text-gray-300">3 active event chats • 12 new messages</span>
           </div>
         </div>
 
@@ -179,7 +198,7 @@ const Messages = () => {
           <TabsList className="grid w-full grid-cols-3 bg-secondary/50 m-2">
             <TabsTrigger value="dms" className="text-xs">DMs</TabsTrigger>
             <TabsTrigger value="groups" className="text-xs">Groups</TabsTrigger>
-            <TabsTrigger value="radio" className="text-xs">Radio</TabsTrigger>
+            <TabsTrigger value="events" className="text-xs">Events</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dms" className="flex-1 overflow-y-auto">
@@ -187,8 +206,8 @@ const Messages = () => {
               {directMessages.map((chat) => (
                 <div
                   key={chat.id}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    selectedChat === chat.id ? 'bg-red-600/20' : 'hover:bg-secondary/50'
+                  className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
+                    selectedChat === chat.id ? 'bg-red-600/20 border border-red-600/30' : ''
                   }`}
                   onClick={() => setSelectedChat(chat.id)}
                 >
@@ -227,8 +246,8 @@ const Messages = () => {
               {communityChats.map((chat) => (
                 <div
                   key={chat.id}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    selectedChat === chat.id ? 'bg-red-600/20' : 'hover:bg-secondary/50'
+                  className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
+                    selectedChat === chat.id ? 'bg-red-600/20 border border-red-600/30' : ''
                   }`}
                   onClick={() => setSelectedChat(chat.id)}
                 >
@@ -239,7 +258,7 @@ const Messages = () => {
                       </div>
                       {chat.isLive && (
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                         </div>
                       )}
                     </div>
@@ -264,31 +283,60 @@ const Messages = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="radio" className="flex-1 overflow-y-auto">
-            <div className="space-y-2 p-2">
-              {radioChannels.map((radio) => (
-                <Card key={radio.id} className="p-3 bg-secondary/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Radio className="w-4 h-4 text-green-500" />
-                      <span className="font-semibold text-sm">{radio.name}</span>
+          <TabsContent value="events" className="flex-1 overflow-y-auto">
+            <div className="space-y-1 p-2">
+              {eventChats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
+                    selectedChat === chat.id ? 'bg-red-600/20 border border-red-600/30' : ''
+                  }`}
+                  onClick={() => setSelectedChat(chat.id)}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        {chat.avatar}
+                      </div>
+                      {chat.isLive && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        </div>
+                      )}
+                      {'isInviteOnly' in chat && chat.isInviteOnly && (
+                        <div className="absolute -top-1 -left-1 w-4 h-4 bg-yellow-500 rounded-full border-2 border-card flex items-center justify-center">
+                          <span className="text-xs">🔒</span>
+                        </div>
+                      )}
                     </div>
-                    <Badge className="bg-green-600 text-xs">
-                      {radio.listeners} listening
-                    </Badge>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <p className="font-semibold truncate">{chat.name}</p>
+                          {'isInviteOnly' in chat && chat.isInviteOnly && (
+                            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-500">
+                              Invite Only
+                            </Badge>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-400">{chat.time}</span>
+                      </div>
+                      <p className="text-sm text-gray-400 truncate">{chat.lastMessage}</p>
+                      <p className="text-xs text-gray-500 flex items-center">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {chat.description}
+                      </p>
+                    </div>
+                    
+                    {chat.unread > 0 && (
+                      <Badge className="bg-blue-600 text-white text-xs">
+                        {chat.unread}
+                      </Badge>
+                    )}
                   </div>
-                  <p className="text-xs text-gray-400 mb-2">🎵 {radio.currentSong}</p>
-                  <Button size="sm" className="w-full bg-green-600 hover:bg-green-700">
-                    <Radio className="w-3 h-3 mr-2" />
-                    Join Radio
-                  </Button>
-                </Card>
+                </div>
               ))}
-              
-              <Button className="w-full bg-red-600 hover:bg-red-700 mt-4">
-                <Mic className="w-4 h-4 mr-2" />
-                Start Your Radio
-              </Button>
             </div>
           </TabsContent>
         </Tabs>

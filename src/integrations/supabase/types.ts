@@ -168,7 +168,11 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          instagram_url: string | null
+          music_url: string | null
+          occupation: string | null
           phone: string | null
+          snapchat_url: string | null
           updated_at: string
           username: string | null
         }
@@ -178,7 +182,11 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          instagram_url?: string | null
+          music_url?: string | null
+          occupation?: string | null
           phone?: string | null
+          snapchat_url?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -188,7 +196,11 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          instagram_url?: string | null
+          music_url?: string | null
+          occupation?: string | null
           phone?: string | null
+          snapchat_url?: string | null
           updated_at?: string
           username?: string | null
         }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -6,12 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  DollarSign, TrendingUp, Users, QrCode, Calendar, Trophy, 
-  Instagram, Twitter, Music, MapPin, Star, Gift, Zap,
-  Camera, Heart, MessageCircle, Share, ExternalLink, User
+  QrCode, Trophy, Camera, ExternalLink, User, Edit,
+  Instagram, Music, MessageSquare
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { usePosts } from '@/hooks/usePosts';
 import { supabase } from '@/integrations/supabase/client';
+import { PostCard } from '@/components/PostCard';
+import { EditProfileModal } from '@/components/EditProfileModal';
 
 interface UserProfile {
   id: string;
@@ -20,41 +21,82 @@ interface UserProfile {
   avatar_url: string | null;
   bio: string | null;
   phone: string | null;
+  occupation: string | null;
+  instagram_url: string | null;
+  snapchat_url: string | null;
+  music_url: string | null;
 }
 
 const Profile = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('posts');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userPosts, setUserPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const { user } = useAuth();
+  const { toggleLike } = usePosts();
+
+  const fetchUserProfile = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+      } else {
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select(`
+          *,
+          profiles:user_id (
+            username,
+            full_name,
+            avatar_url
+          ),
+          likes!left (
+            user_id
+          )
+        `)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const postsWithLikes = data?.map(post => ({
+        ...post,
+        user_has_liked: post.likes?.some((like: any) => like.user_id === user?.id) || false
+      })) || [];
+
+      setUserPosts(postsWithLikes);
+    } catch (error) {
+      console.error('Error fetching user posts:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching profile:', error);
-        } else {
-          setUserProfile(data);
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserProfile();
+    fetchUserPosts();
   }, [user]);
 
   const getInitials = (name: string | null) => {
@@ -71,40 +113,25 @@ const Profile = () => {
   };
 
   const socialLinks = [
-    { platform: 'Instagram', handle: '@john.vibes', icon: Instagram, color: 'text-pink-500' },
-    { platform: 'Twitter', handle: '@johnvibes', icon: Twitter, color: 'text-blue-500' },
-    { platform: 'Spotify', handle: 'John\'s Playlists', icon: Music, color: 'text-green-500' }
-  ];
-
-  const badges = [
-    { name: 'Party Wizard', icon: '🧙‍♂️', description: '10 successful events hosted' },
-    { name: 'Community Builder', icon: '🏗️', description: 'Brought 50+ people together' },
-    { name: 'Vibe Curator', icon: '🎵', description: 'Top-rated playlist creator' },
-    { name: 'Snack God', icon: '🍕', description: 'Always brings the best food' }
-  ];
-
-  const recentMemories = [
-    {
-      event: 'Rooftop Chill Session',
-      date: 'Last Friday',
-      photos: 12,
-      likes: 45,
-      people: ['@sarah', '@mike', '@anna']
+    { 
+      platform: 'Instagram', 
+      url: userProfile?.instagram_url, 
+      icon: Instagram, 
+      color: 'text-pink-500' 
     },
-    {
-      event: 'Gaming Tournament',
-      date: '2 weeks ago',
-      photos: 8,
-      likes: 32,
-      people: ['@alex', '@priya', '@sam']
+    { 
+      platform: 'Snapchat', 
+      url: userProfile?.snapchat_url, 
+      icon: MessageSquare, 
+      color: 'text-yellow-500' 
+    },
+    { 
+      platform: 'Music', 
+      url: userProfile?.music_url, 
+      icon: Music, 
+      color: 'text-green-500' 
     }
-  ];
-
-  const investments = [
-    { event: 'VIP Pool Party', invested: 250, returns: 312, roi: '+24.8%', status: 'completed' },
-    { event: 'Secret Concert', invested: 150, returns: 0, roi: 'Pending', status: 'active' },
-    { event: 'Beach Cleanup + Party', invested: 100, returns: 125, roi: '+25%', status: 'completed' }
-  ];
+  ].filter(link => link.url);
 
   if (loading) {
     return (
@@ -147,7 +174,7 @@ const Profile = () => {
           
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-2xl font-bold text-white">{getDisplayName()}</h1>
-            <p className="text-gray-400 mb-2">{getUsername()} • Student</p>
+            <p className="text-gray-400 mb-2">{getUsername()} • {userProfile?.occupation || 'Student'}</p>
             
             <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
               <Badge className="badge-glow">Level 1 Host</Badge>
@@ -157,7 +184,7 @@ const Profile = () => {
 
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-red-500">0</div>
+                <div className="text-2xl font-bold text-red-500">₹0</div>
                 <div className="text-xs text-gray-400">Total Points</div>
               </div>
               <div className="profile-stat">
@@ -165,21 +192,25 @@ const Profile = () => {
                 <div className="text-xs text-gray-400">Events Hosted</div>
               </div>
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-green-500">0</div>
-                <div className="text-xs text-gray-400">Events Joined</div>
+                <div className="text-2xl font-bold text-green-500">{userPosts.length}</div>
+                <div className="text-xs text-gray-400">Posts</div>
               </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-4">
-              {socialLinks.map((social, index) => (
-                <Button key={index} variant="outline" size="sm" className="border-gray-600">
-                  <social.icon className={`w-4 h-4 mr-2 ${social.color}`} />
-                  {social.handle}
-                  <ExternalLink className="w-3 h-3 ml-1" />
-                </Button>
-              ))}
-            </div>
+            {socialLinks.length > 0 && (
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-4">
+                {socialLinks.map((social, index) => (
+                  <Button key={index} variant="outline" size="sm" className="border-gray-600" asChild>
+                    <a href={social.url} target="_blank" rel="noopener noreferrer">
+                      <social.icon className={`w-4 h-4 mr-2 ${social.color}`} />
+                      {social.platform}
+                      <ExternalLink className="w-3 h-3 ml-1" />
+                    </a>
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="flex flex-col space-y-2">
@@ -190,38 +221,42 @@ const Profile = () => {
             <Button variant="outline" className="border-red-600 text-red-600">
               Share Profile
             </Button>
+            <Button variant="outline" onClick={() => setEditModalOpen(true)} className="border-blue-600 text-blue-600">
+              <Edit className="w-4 h-4 mr-2" />
+              Edit Profile
+            </Button>
           </div>
-        </div>
-      </Card>
-
-      {/* Badges */}
-      <Card className="twitter-card p-6">
-        <h2 className="text-xl font-bold mb-4 flex items-center">
-          <Trophy className="w-5 h-5 text-yellow-500 mr-2" />
-          Achievement Badges
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {badges.map((badge, index) => (
-            <div key={index} className="text-center p-4 bg-secondary/30 rounded-xl hover:bg-secondary/50 transition-all">
-              <div className="text-3xl mb-2">{badge.icon}</div>
-              <h3 className="font-semibold text-sm">{badge.name}</h3>
-              <p className="text-xs text-gray-400 mt-1">{badge.description}</p>
-            </div>
-          ))}
         </div>
       </Card>
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 bg-secondary">
+        <TabsList className="grid w-full grid-cols-5 bg-secondary">
+          <TabsTrigger value="posts">Posts</TabsTrigger>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="investments">Investments</TabsTrigger>
           <TabsTrigger value="memories">Memories</TabsTrigger>
           <TabsTrigger value="qr">QR & Check-in</TabsTrigger>
         </TabsList>
 
+        <TabsContent value="posts" className="space-y-6">
+          <Card className="twitter-card p-6">
+            <h3 className="text-lg font-bold mb-4">My Posts</h3>
+            {userPosts.length === 0 ? (
+              <div className="text-center py-8 text-gray-400">
+                <p>No posts yet. Create your first post to see it here!</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {userPosts.map(post => (
+                  <PostCard key={post.id} post={post} onLike={toggleLike} />
+                ))}
+              </div>
+            )}
+          </Card>
+        </TabsContent>
+
         <TabsContent value="overview" className="space-y-6">
-          {/* Recent Activity */}
           <Card className="twitter-card p-6">
             <h3 className="text-lg font-bold mb-4">Recent Activity</h3>
             <div className="space-y-3">
@@ -241,16 +276,16 @@ const Profile = () => {
         <TabsContent value="investments" className="space-y-6">
           <Card className="twitter-card p-6">
             <h3 className="text-lg font-bold mb-4 flex items-center">
-              <DollarSign className="w-5 h-5 text-green-500 mr-2" />
+              <Trophy className="w-5 h-5 text-green-500 mr-2" />
               Investment Portfolio
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-green-500">$0</div>
+                <div className="text-2xl font-bold text-green-500">₹0</div>
                 <div className="text-xs text-gray-400">Total Returns</div>
               </div>
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-blue-500">$0</div>
+                <div className="text-2xl font-bold text-blue-500">₹0</div>
                 <div className="text-xs text-gray-400">Invested</div>
               </div>
               <div className="profile-stat">
@@ -298,6 +333,13 @@ const Profile = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <EditProfileModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        userProfile={userProfile}
+        onProfileUpdate={fetchUserProfile}
+      />
     </div>
   );
 };
