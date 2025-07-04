@@ -13,9 +13,7 @@ import Messages from "./pages/Messages";
 import Communities from "./pages/Communities";
 import Travel from "./pages/Travel";
 import MusicPage from "./pages/Music";
-import RadioPage from "./pages/Radio";
 import Profile from "./pages/Profile";
-import Voting from "./pages/Voting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,10 +32,8 @@ const App = () => (
               <Route path="invest" element={<Invest />} />
               <Route path="messages" element={<Messages />} />
               <Route path="communities" element={<Communities />} />
-              <Route path="voting" element={<Voting />} />
               <Route path="travel" element={<Travel />} />
               <Route path="music" element={<MusicPage />} />
-              <Route path="radio" element={<RadioPage />} />
               <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<NotFound />} />

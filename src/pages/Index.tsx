@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,7 @@ import { usePosts } from '@/hooks/usePosts';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { CreatePostModal } from '@/components/CreatePostModal';
 import { PostCard } from '@/components/PostCard';
+
 const Index = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
@@ -54,6 +56,7 @@ const Index = () => {
     hasUpdate: false,
     isLive: false
   }];
+
   const handleCreatePost = () => {
     if (!user) {
       setLoginModalOpen(true);
@@ -61,35 +64,38 @@ const Index = () => {
       setCreatePostModalOpen(true);
     }
   };
+
   const handleLogin = () => {
     setLoginModalOpen(true);
   };
+
   if (authLoading) {
     return <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 bg-red-600 rounded-full animate-pulse mb-4 mx-auto"></div>
+          <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
           <p>Loading four degree...</p>
         </div>
       </div>;
   }
+
   return <div className="min-h-screen bg-black text-white">
       {/* Mobile Header */}
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#00197e] rounded-full flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-red-600">four degree</h1>
+            <h1 className="text-xl font-bold text-[#00197e]">four degree</h1>
           </div>
           
           <div className="flex items-center space-x-3">
-            {user && <div className="flex items-center space-x-1 bg-red-600/20 px-2 py-1 rounded-full">
+            {user && <div className="flex items-center space-x-1 bg-[#00197e]/20 px-2 py-1 rounded-full">
                 <Flame className="w-4 h-4 text-orange-500" />
                 <span className="text-xs font-bold">{streakCount}</span>
               </div>}
             
-            {user ? <Button size="sm" onClick={handleCreatePost} className="bg-red-600 hover:bg-red-700 px-3">
+            {user ? <Button size="sm" onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80 px-3">
                 <Plus className="w-4 h-4 mr-1" />
                 Create
               </Button> : <Button size="sm" onClick={handleLogin} className="px-3 bg-[#00197e]">
@@ -103,7 +109,7 @@ const Index = () => {
         {/* Stories Section */}
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide pb-2">
           {stories.map(story => <div key={story.id} className="flex-shrink-0 relative">
-              <div className={`w-16 h-16 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-red-500 to-pink-500' : 'bg-gray-600'}`}>
+              <div className={`w-16 h-16 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-[#00197e] to-pink-500' : 'bg-gray-600'}`}>
                 <div className="w-full h-full bg-black rounded-full p-0.5">
                   <img src={story.image} alt={story.user} className="w-full h-full rounded-full object-cover" onError={e => {
                 console.log('Image failed to load:', story.image);
@@ -112,7 +118,7 @@ const Index = () => {
                 </div>
               </div>
               {story.isLive && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-red-600 text-xs px-1 py-0">LIVE</Badge>
+                  <Badge className="bg-[#00197e] text-xs px-1 py-0">LIVE</Badge>
                 </div>}
               <p className="text-xs text-center mt-1 truncate w-16">{story.user.split('_')[0]}</p>
             </div>)}
@@ -128,7 +134,7 @@ const Index = () => {
         {!user && <div className="text-center py-8 space-y-4">
             <h2 className="text-2xl font-bold">Welcome to four degree</h2>
             <p className="text-gray-400">Join the community to see posts and connect with others</p>
-            <Button onClick={handleLogin} className="bg-red-600 hover:bg-red-700 ">
+            <Button onClick={handleLogin} className="bg-[#00197e] hover:bg-[#00197e]/80">
               Sign In to Continue
             </Button>
           </div>}
@@ -151,7 +157,7 @@ const Index = () => {
               </div> : posts.length === 0 ? <div className="text-center py-8 space-y-4">
                 <h3 className="text-xl font-semibold">No posts yet</h3>
                 <p className="text-gray-400">Be the first to share something amazing!</p>
-                <Button onClick={handleCreatePost} className="bg-red-600 hover:bg-red-700">
+                <Button onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80">
                   Create First Post
                 </Button>
               </div> : posts.map(post => <PostCard key={post.id} post={post} onLike={toggleLike} />)}
@@ -163,4 +169,5 @@ const Index = () => {
       <CreatePostModal isOpen={createPostModalOpen} onClose={() => setCreatePostModalOpen(false)} />
     </div>;
 };
+
 export default Index;

@@ -4,16 +4,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Search, Send } from 'lucide-react';
+import { Search, Send, Check } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface SharePostModalProps {
   isOpen: boolean;
   onClose: () => void;
   postContent: string;
+  postId: string;
 }
 
-export const SharePostModal = ({ isOpen, onClose, postContent }: SharePostModalProps) => {
+export const SharePostModal = ({ isOpen, onClose, postContent, postId }: SharePostModalProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [sentTo, setSentTo] = useState<Set<string>>(new Set());
+  const { toast } = useToast();
 
   // Mock DM contacts - in a real app, this would come from your messages/contacts
   const dmContacts = [
@@ -28,20 +32,53 @@ export const SharePostModal = ({ isOpen, onClose, postContent }: SharePostModalP
     contact.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSendToContact = (contactName: string) => {
-    // In a real app, this would send the post to the selected contact
-    console.log(`Sharing post with ${contactName}: ${postContent}`);
+  const handleSendToContact = async (contactId: string, contactName: string) => {
+    try {
+      // In a real app, this would send the post to the selected contact via your messaging system
+      // For now, we'll simulate the action
+      console.log(`Sharing post ${postId} with ${contactName}: ${postContent}`);
+      
+      // Add to sent list
+      setSentTo(prev => new Set([...prev, contactId]));
+      
+      toast({
+        title: "Post Shared!",
+        description: `Post shared with ${contactName}`,
+      });
+
+      // Auto close after 2 seconds if all contacts have been messaged
+      setTimeout(() => {
+        if (sentTo.size >= filteredContacts.length - 1) {
+          onClose();
+        }
+      }, 1500);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to share post",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleClose = () => {
+    setSentTo(new Set());
     onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md bg-card border border-border">
         <DialogHeader>
           <DialogTitle className="text-white">Share Post</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
+          {/* Post Preview */}
+          <div className="bg-secondary/30 rounded-lg p-3">
+            <p className="text-sm text-gray-300 line-clamp-2">{postContent}</p>
+          </div>
+
           {/* Search Bar */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -55,33 +92,44 @@ export const SharePostModal = ({ isOpen, onClose, postContent }: SharePostModalP
 
           {/* Contacts List */}
           <div className="max-h-60 overflow-y-auto space-y-2">
-            {filteredContacts.map((contact) => (
-              <div
-                key={contact.id}
-                className="flex items-center justify-between p-3 hover:bg-secondary/50 rounded-lg cursor-pointer"
-                onClick={() => handleSendToContact(contact.name)}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="relative">
-                    <Avatar className="w-10 h-10">
-                      <AvatarFallback className="bg-red-600 text-white">
-                        {contact.avatar}
-                      </AvatarFallback>
-                    </Avatar>
-                    {contact.online && (
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
-                    )}
+            {filteredContacts.map((contact) => {
+              const hasSent = sentTo.has(contact.id);
+              return (
+                <div
+                  key={contact.id}
+                  className="flex items-center justify-between p-3 hover:bg-secondary/50 rounded-lg"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className="bg-[#00197e] text-white">
+                          {contact.avatar}
+                        </AvatarFallback>
+                      </Avatar>
+                      {contact.online && (
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">{contact.name}</p>
+                      <p className="text-sm text-gray-400">{contact.username}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-white">{contact.name}</p>
-                    <p className="text-sm text-gray-400">{contact.username}</p>
-                  </div>
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleSendToContact(contact.id, contact.name)}
+                    disabled={hasSent}
+                    className={`${
+                      hasSent 
+                        ? 'bg-green-600 hover:bg-green-600' 
+                        : 'bg-[#00197e] hover:bg-[#00197e]/80'
+                    }`}
+                  >
+                    {hasSent ? <Check className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                  </Button>
                 </div>
-                <Button size="sm" className="bg-red-600 hover:bg-red-700">
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {filteredContacts.length === 0 && (

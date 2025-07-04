@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -137,7 +138,7 @@ const Profile = () => {
     return (
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         <div className="text-center py-8">
-          <div className="w-8 h-8 bg-red-600 rounded-full animate-pulse mb-4 mx-auto"></div>
+          <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
           <p>Loading profile...</p>
         </div>
       </div>
@@ -163,7 +164,7 @@ const Profile = () => {
           <div className="relative">
             <Avatar className="w-24 h-24">
               <AvatarImage src={userProfile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-500 text-white text-2xl font-bold">
+              <AvatarFallback className="bg-gradient-to-br from-[#00197e] to-[#00197e]/80 text-white text-2xl font-bold">
                 {getInitials(userProfile?.full_name)}
               </AvatarFallback>
             </Avatar>
@@ -178,13 +179,13 @@ const Profile = () => {
             
             <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
               <Badge className="badge-glow">Level 1 Host</Badge>
-              <Badge variant="outline" className="border-red-600 text-red-600">New Member</Badge>
+              <Badge variant="outline" className="border-[#00197e] text-[#00197e]">New Member</Badge>
               <Badge variant="outline" className="border-yellow-500 text-yellow-500">1-day Streak 🔥</Badge>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-red-500">₹0</div>
+                <div className="text-2xl font-bold text-[#00197e]">₹0</div>
                 <div className="text-xs text-gray-400">Total Points</div>
               </div>
               <div className="profile-stat">
@@ -214,11 +215,11 @@ const Profile = () => {
           </div>
           
           <div className="flex flex-col space-y-2">
-            <Button className="bg-red-600 hover:bg-red-700">
+            <Button className="bg-[#00197e] hover:bg-[#00197e]/80">
               <QrCode className="w-4 h-4 mr-2" />
               My QR Code
             </Button>
-            <Button variant="outline" className="border-red-600 text-red-600">
+            <Button variant="outline" className="border-[#00197e] text-[#00197e]">
               Share Profile
             </Button>
             <Button variant="outline" onClick={() => setEditModalOpen(true)} className="border-blue-600 text-blue-600">
@@ -261,7 +262,7 @@ const Profile = () => {
             <h3 className="text-lg font-bold mb-4">Recent Activity</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#00197e] rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <div>
@@ -285,7 +286,7 @@ const Profile = () => {
                 <div className="text-xs text-gray-400">Total Returns</div>
               </div>
               <div className="profile-stat">
-                <div className="text-2xl font-bold text-blue-500">₹0</div>
+                <div className="text-2xl font-bold text-[#00197e]">₹0</div>
                 <div className="text-xs text-gray-400">Invested</div>
               </div>
               <div className="profile-stat">
@@ -315,7 +316,7 @@ const Profile = () => {
         <TabsContent value="qr" className="space-y-6">
           <Card className="twitter-card p-6">
             <h3 className="text-lg font-bold mb-4 flex items-center">
-              <QrCode className="w-5 h-5 text-blue-500 mr-2" />
+              <QrCode className="w-5 h-5 text-[#00197e] mr-2" />
               Check-in QR Code
             </h3>
             <div className="text-center">
@@ -327,7 +328,7 @@ const Profile = () => {
               </p>
               <div className="flex space-x-2 justify-center">
                 <Button variant="outline">Save to Photos</Button>
-                <Button className="bg-red-600 hover:bg-red-700">Share QR</Button>
+                <Button className="bg-[#00197e] hover:bg-[#00197e]/80">Share QR</Button>
               </div>
             </div>
           </Card>

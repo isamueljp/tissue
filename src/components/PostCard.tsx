@@ -7,6 +7,7 @@ import { Heart, MessageCircle, Forward, MoreVertical } from 'lucide-react';
 import { Post } from '@/hooks/usePosts';
 import { formatDistanceToNow } from 'date-fns';
 import { SharePostModal } from './SharePostModal';
+import { CommentsSection } from './CommentsSection';
 
 interface PostCardProps {
   post: Post;
@@ -15,6 +16,7 @@ interface PostCardProps {
 
 export const PostCard = ({ post, onLike }: PostCardProps) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
 
   return (
@@ -25,7 +27,7 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
           <div className="flex items-center space-x-3">
             <Avatar className="w-10 h-10">
               <AvatarImage src={post.profiles.avatar_url} />
-              <AvatarFallback className="bg-red-600 text-white">
+              <AvatarFallback className="bg-[#00197e] text-white">
                 {post.profiles.full_name?.charAt(0) || post.profiles.username?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
@@ -65,8 +67,8 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
               onClick={() => onLike(post.id)}
               className={`flex items-center space-x-1 p-2 ${
                 post.user_has_liked 
-                  ? 'text-red-500 hover:text-red-400' 
-                  : 'text-gray-400 hover:text-red-400'
+                  ? 'text-[#00197e] hover:text-[#00197e]/80' 
+                  : 'text-gray-400 hover:text-[#00197e]'
               }`}
             >
               <Heart 
@@ -78,7 +80,12 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="flex items-center space-x-1 text-gray-400 hover:text-blue-400 p-2"
+              onClick={() => setShowComments(!showComments)}
+              className={`flex items-center space-x-1 p-2 ${
+                showComments 
+                  ? 'text-[#00197e] hover:text-[#00197e]/80' 
+                  : 'text-gray-400 hover:text-[#00197e]'
+              }`}
             >
               <MessageCircle className="w-4 h-4" />
               <span className="text-xs">{post.comments_count}</span>
@@ -88,18 +95,22 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
               variant="ghost" 
               size="sm" 
               onClick={() => setShareModalOpen(true)}
-              className="text-gray-400 hover:text-green-400 p-2"
+              className="text-gray-400 hover:text-[#00197e] p-2"
             >
               <Forward className="w-4 h-4" />
             </Button>
           </div>
         </div>
+
+        {/* Comments Section */}
+        <CommentsSection postId={post.id} isVisible={showComments} />
       </Card>
 
       <SharePostModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         postContent={post.content}
+        postId={post.id}
       />
     </>
   );
