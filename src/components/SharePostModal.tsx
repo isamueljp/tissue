@@ -34,9 +34,18 @@ export const SharePostModal = ({ isOpen, onClose, postContent, postId }: SharePo
 
   const handleSendToContact = async (contactId: string, contactName: string) => {
     try {
-      // In a real app, this would send the post to the selected contact via your messaging system
-      // For now, we'll simulate the action
-      console.log(`Sharing post ${postId} with ${contactName}: ${postContent}`);
+      // Store the shared post in localStorage to be picked up by Messages component
+      const sharedPostData = {
+        postId,
+        content: postContent,
+        sharedTo: contactName,
+        timestamp: new Date().toISOString()
+      };
+      
+      localStorage.setItem('sharedPost', JSON.stringify(sharedPostData));
+      
+      // Trigger storage event for same-tab communication
+      window.dispatchEvent(new Event('storage'));
       
       // Add to sent list
       setSentTo(prev => new Set([...prev, contactId]));
@@ -46,11 +55,9 @@ export const SharePostModal = ({ isOpen, onClose, postContent, postId }: SharePo
         description: `Post shared with ${contactName}`,
       });
 
-      // Auto close after 2 seconds if all contacts have been messaged
+      // Auto close after 1.5 seconds
       setTimeout(() => {
-        if (sentTo.size >= filteredContacts.length - 1) {
-          onClose();
-        }
+        onClose();
       }, 1500);
     } catch (error) {
       toast({
@@ -63,6 +70,7 @@ export const SharePostModal = ({ isOpen, onClose, postContent, postId }: SharePo
 
   const handleClose = () => {
     setSentTo(new Set());
+    setSearchTerm('');
     onClose();
   };
 

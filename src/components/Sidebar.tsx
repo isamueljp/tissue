@@ -1,5 +1,7 @@
+
 import { Link, useLocation } from 'react-router-dom';
-import { Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music, Phone } from 'lucide-react';
+import { Home, TrendingUp, MessageSquare, Users, Vote, DollarSign, User, MapPin, Music } from 'lucide-react';
+
 const Sidebar = () => {
   const location = useLocation();
   const menuItems = [{
@@ -35,10 +37,6 @@ const Sidebar = () => {
     label: 'Music',
     path: '/music'
   }, {
-    icon: Phone,
-    label: 'Radio',
-    path: '/radio'
-  }, {
     icon: User,
     label: 'Profile',
     path: '/profile'
@@ -67,18 +65,28 @@ const Sidebar = () => {
       {/* Premium status indicator */}
       <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full border border-black shadow-lg"></div>
     </div>;
+
   return <div className="fixed left-0 top-0 h-screen w-64 bg-black border-r border-border p-4">
       <div className="flex items-center space-x-3 mb-8 group">
+        {/* Fourth Degree Logo */}
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#00197e] flex items-center justify-center">
+          <img 
+            src="/lovable-uploads/ee40ffbc-5548-405a-b158-a0a40933c6a3.png" 
+            alt="Fourth Degree Logo" 
+            className="w-full h-full object-contain"
+          />
+        </div>
         <FourDegreeLogo />
         <h1 className="text-2xl font-bold transition-colors duration-300 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-purple-200 group-hover:from-blue-400 group-hover:via-purple-400 group-hover:to-pink-400">fourth degree</h1>
       </div>
       
       <nav className="space-y-2">
-        {menuItems.map(item => <Link key={item.path} to={item.path} className={`sidebar-item ${location.pathname === item.path ? 'bg-red-600/20 text-red-600' : 'text-gray-400 hover:text-white'}`}>
+        {menuItems.map(item => <Link key={item.path} to={item.path} className={`sidebar-item ${location.pathname === item.path ? 'bg-[#00197e]/20 text-[#00197e]' : 'text-gray-400 hover:text-white'}`}>
             <item.icon className="w-5 h-5" />
             <span>{item.label}</span>
           </Link>)}
       </nav>
     </div>;
 };
+
 export default Sidebar;

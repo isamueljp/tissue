@@ -13,19 +13,19 @@
     --card-foreground: 255 255 255;
     --popover: 10 10 10;
     --popover-foreground: 255 255 255;
-    --primary: 220 38 38;
+    --primary: 1 25 126;
     --primary-foreground: 255 255 255;
     --secondary: 20 20 20;
     --secondary-foreground: 156 163 175;
     --muted: 25 25 25;
     --muted-foreground: 107 114 128;
-    --accent: 220 38 38;
+    --accent: 1 25 126;
     --accent-foreground: 255 255 255;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --border: 30 30 30;
     --input: 25 25 25;
-    --ring: 220 38 38;
+    --ring: 1 25 126;
     --radius: 0.75rem;
   }
 }
@@ -51,15 +51,15 @@
 @layer utilities {
   /* Mobile-optimized components */
   .mobile-card {
-    @apply bg-card border border-border hover:border-red-600/30 transition-all duration-300 rounded-xl;
+    @apply bg-card border border-border hover:border-[#00197e]/30 transition-all duration-300 rounded-xl;
   }
   
   .twitter-card {
-    @apply bg-card border border-border hover:border-red-600/30 transition-all duration-300 rounded-xl p-4;
+    @apply bg-card border border-border hover:border-[#00197e]/30 transition-all duration-300 rounded-xl p-4;
   }
   
   .red-glow {
-    @apply shadow-lg shadow-red-600/10 border border-red-600/20;
+    @apply shadow-lg shadow-[#00197e]/10 border border-[#00197e]/20;
   }
   
   .sidebar-item {
@@ -67,7 +67,7 @@
   }
   
   .event-card {
-    @apply bg-card border border-border rounded-xl p-4 hover:border-red-600/40 transition-all duration-300 cursor-pointer;
+    @apply bg-card border border-border rounded-xl p-4 hover:border-[#00197e]/40 transition-all duration-300 cursor-pointer;
   }
   
   .profile-stat {
@@ -75,7 +75,7 @@
   }
   
   .badge-glow {
-    @apply bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-gradient-to-r from-[#00197e] to-[#00197e]/80 text-white px-3 py-1 rounded-full text-sm font-medium;
   }
   
   .hype-meter {
@@ -150,10 +150,10 @@
 
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 5px rgb(220 38 38 / 0.3); 
+    box-shadow: 0 0 5px rgb(1 25 126 / 0.3); 
   }
   50% { 
-    box-shadow: 0 0 15px rgb(220 38 38 / 0.5); 
+    box-shadow: 0 0 15px rgb(1 25 126 / 0.5); 
   }
 }
 
