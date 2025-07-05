@@ -35,7 +35,7 @@ const Header = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-[#00197e] to-[#00197e]/80 rounded-full flex items-center justify-center">
               <Zap className="w-6 h-6 text-white font-bold" />
             </div>
-            <h1 className="text-2xl font-bold text-gradient-red">four degree</h1>
+            <h1 className="text-2xl font-bold text-gradient-red">fourth degree</h1>
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">
