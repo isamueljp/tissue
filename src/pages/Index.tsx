@@ -73,7 +73,7 @@ const Index = () => {
     return <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
-          <p>Loading fourth degree...</p>
+          <p>Loading four degree...</p>
         </div>
       </div>;
   }
@@ -86,7 +86,7 @@ const Index = () => {
             <div className="w-8 h-8 bg-[#00197e] rounded-full flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-[#00197e]">fourth degree</h1>
+            <h1 className="text-xl font-bold text-[#00197e]">four degree</h1>
           </div>
           
           <div className="flex items-center space-x-3">
@@ -106,58 +106,22 @@ const Index = () => {
       </div>
 
       <div className="max-w-lg mx-auto p-4 space-y-4">
-        {/* Compact Stories Section */}
-        <div className="bg-secondary/30 rounded-lg p-3 border border-border/30">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium text-white/80">Live</span>
-            </div>
-            <span className="text-xs text-white/60">{stories.filter(s => s.isLive).length} active</span>
-          </div>
-          
-          <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
-            {stories.map(story => (
-              <div key={story.id} className="flex-shrink-0 relative group cursor-pointer">
-                <div className="relative">
-                  {/* Small circular avatars */}
-                  <div className={`w-12 h-12 rounded-full overflow-hidden relative transition-all duration-300 group-hover:scale-110 ${
-                    story.hasUpdate || story.isLive 
-                      ? 'ring-2 ring-[#00197e] ring-offset-1 ring-offset-black' 
-                      : 'ring-1 ring-gray-600'
-                  }`}>
-                    <img 
-                      src={story.image} 
-                      alt={story.user} 
-                      className="w-full h-full object-cover"
-                      onError={e => {
-                        console.log('Image failed to load:', story.image);
-                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${story.user}&background=random`;
-                      }} 
-                    />
-                    
-                    {/* Status indicators */}
-                    {story.isLive && (
-                      <div className="absolute -top-1 -right-1">
-                        <div className="w-3 h-3 bg-red-500 rounded-full border border-black animate-pulse"></div>
-                      </div>
-                    )}
-                    
-                    {story.hasUpdate && !story.isLive && (
-                      <div className="absolute -top-1 -right-1">
-                        <div className="w-3 h-3 bg-[#00197e] rounded-full border border-black"></div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Username below */}
-                  <p className="text-xs text-center mt-1 text-white/60 font-medium truncate w-12">
-                    {story.user.split('_')[0]}
-                  </p>
+        {/* Stories Section */}
+        <div className="flex space-x-3 overflow-x-auto scrollbar-hide pb-2">
+          {stories.map(story => <div key={story.id} className="flex-shrink-0 relative">
+              <div className={`w-16 h-16 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-[#00197e] to-pink-500' : 'bg-gray-600'}`}>
+                <div className="w-full h-full bg-black rounded-full p-0.5">
+                  <img src={story.image} alt={story.user} className="w-full h-full rounded-full object-cover" onError={e => {
+                console.log('Image failed to load:', story.image);
+                e.currentTarget.src = `https://ui-avatars.com/api/?name=${story.user}&background=random`;
+              }} />
                 </div>
               </div>
-            ))}
-          </div>
+              {story.isLive && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-[#00197e] text-xs px-1 py-0">LIVE</Badge>
+                </div>}
+              <p className="text-xs text-center mt-1 truncate w-16">{story.user.split('_')[0]}</p>
+            </div>)}
         </div>
 
         {/* Search Bar */}
@@ -168,7 +132,7 @@ const Index = () => {
 
         {/* Posts Feed */}
         {!user && <div className="text-center py-8 space-y-4">
-            <h2 className="text-2xl font-bold">Welcome to fourth degree</h2>
+            <h2 className="text-2xl font-bold">Welcome to four degree</h2>
             <p className="text-gray-400">Join the community to see posts and connect with others</p>
             <Button onClick={handleLogin} className="bg-[#00197e] hover:bg-[#00197e]/80">
               Sign In to Continue
