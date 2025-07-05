@@ -106,24 +106,24 @@ const Index = () => {
       </div>
 
       <div className="max-w-lg mx-auto p-4 space-y-4">
-        {/* Redesigned Stories Section - Less Instagram-like */}
-        <div className="bg-gradient-to-r from-[#00197e]/10 to-purple-500/10 rounded-2xl p-4 backdrop-blur-sm border border-[#00197e]/20">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-white/80 flex items-center">
-              <Play className="w-4 h-4 mr-2 text-[#00197e]" />
-              Live Stories
-            </h3>
-            <span className="text-xs text-white/60">{stories.filter(s => s.isLive).length} live now</span>
+        {/* Compact Stories Section */}
+        <div className="bg-secondary/30 rounded-lg p-3 border border-border/30">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-white/80">Live</span>
+            </div>
+            <span className="text-xs text-white/60">{stories.filter(s => s.isLive).length} active</span>
           </div>
           
-          <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
+          <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
             {stories.map(story => (
               <div key={story.id} className="flex-shrink-0 relative group cursor-pointer">
                 <div className="relative">
-                  {/* Smooth rectangular container instead of circular */}
-                  <div className={`w-20 h-28 rounded-xl overflow-hidden relative transition-all duration-300 group-hover:scale-105 ${
+                  {/* Small circular avatars */}
+                  <div className={`w-12 h-12 rounded-full overflow-hidden relative transition-all duration-300 group-hover:scale-110 ${
                     story.hasUpdate || story.isLive 
-                      ? 'ring-2 ring-[#00197e] ring-offset-2 ring-offset-black' 
+                      ? 'ring-2 ring-[#00197e] ring-offset-1 ring-offset-black' 
                       : 'ring-1 ring-gray-600'
                   }`}>
                     <img 
@@ -136,28 +136,22 @@ const Index = () => {
                       }} 
                     />
                     
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    
                     {/* Status indicators */}
                     {story.isLive && (
-                      <div className="absolute top-2 left-2">
-                        <div className="flex items-center bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                          <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse" />
-                          LIVE
-                        </div>
+                      <div className="absolute -top-1 -right-1">
+                        <div className="w-3 h-3 bg-red-500 rounded-full border border-black animate-pulse"></div>
                       </div>
                     )}
                     
                     {story.hasUpdate && !story.isLive && (
-                      <div className="absolute top-2 right-2">
-                        <div className="w-3 h-3 bg-[#00197e] rounded-full animate-pulse" />
+                      <div className="absolute -top-1 -right-1">
+                        <div className="w-3 h-3 bg-[#00197e] rounded-full border border-black"></div>
                       </div>
                     )}
                   </div>
                   
-                  {/* Username at bottom */}
-                  <p className="text-xs text-center mt-2 text-white/70 font-medium truncate w-20">
+                  {/* Username below */}
+                  <p className="text-xs text-center mt-1 text-white/60 font-medium truncate w-12">
                     {story.user.split('_')[0]}
                   </p>
                 </div>
