@@ -10,11 +10,21 @@ import {
   Zap, Heart, Gift, Calendar
 } from 'lucide-react';
 
+interface Message {
+  id: string;
+  sender: string;
+  message: string;
+  time: string;
+  isMe: boolean;
+  type: string;
+  postContent?: string; // Optional property for shared posts
+}
+
 const Messages = () => {
   const [selectedChat, setSelectedChat] = useState('1');
   const [activeTab, setActiveTab] = useState('dms');
   const [message, setMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState([
+  const [chatMessages, setChatMessages] = useState<Message[]>([
     {
       id: '1',
       sender: 'Sarah Chen',
@@ -47,7 +57,7 @@ const Messages = () => {
       const sharedPost = localStorage.getItem('sharedPost');
       if (sharedPost) {
         const postData = JSON.parse(sharedPost);
-        const newMessage = {
+        const newMessage: Message = {
           id: Date.now().toString(),
           sender: 'You',
           message: `Shared a post: "${postData.content}"`,
@@ -175,7 +185,7 @@ const Messages = () => {
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
-    const newMessage = {
+    const newMessage: Message = {
       id: Date.now().toString(),
       sender: 'You',
       message: message.trim(),
@@ -199,9 +209,9 @@ const Messages = () => {
             <div className="flex items-center space-x-2">
               <Button size="sm" variant="ghost" className="relative">
                 <Heart className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#00197e] rounded-full"></span>
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-blue-600 rounded-full"></span>
               </Button>
-              <Button size="sm" className="bg-[#00197e] hover:bg-[#00197e]/80">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-600/80">
                 <MessageCircle className="w-4 h-4" />
               </Button>
             </div>
@@ -217,11 +227,11 @@ const Messages = () => {
 
           {/* Quick Actions */}
           <div className="flex space-x-2 mt-3">
-            <Button size="sm" variant="outline" className="flex-1 border-[#00197e]/30 text-xs">
+            <Button size="sm" variant="outline" className="flex-1 border-blue-600/30 text-xs">
               <Users className="w-3 h-3 mr-1" />
               Groups
             </Button>
-            <Button size="sm" variant="outline" className="flex-1 border-[#00197e]/30 text-xs">
+            <Button size="sm" variant="outline" className="flex-1 border-blue-600/30 text-xs">
               <Zap className="w-3 h-3 mr-1" />
               Events
             </Button>
@@ -229,7 +239,7 @@ const Messages = () => {
         </div>
 
         {/* Live Activity Feed */}
-        <div className="bg-gradient-to-r from-[#00197e]/10 to-transparent p-3 border-b border-border">
+        <div className="bg-gradient-to-r from-blue-600/10 to-transparent p-3 border-b border-border">
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-xs font-medium">Live:</span>
@@ -251,13 +261,13 @@ const Messages = () => {
                 <div
                   key={chat.id}
                   className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
-                    selectedChat === chat.id ? 'bg-[#00197e]/20 border border-[#00197e]/30' : ''
+                    selectedChat === chat.id ? 'bg-blue-600/20 border border-blue-600/30' : ''
                   }`}
                   onClick={() => setSelectedChat(chat.id)}
                 >
                   <div className="flex items-center space-x-3">
                     <div className="relative">
-                      <div className="w-12 h-12 bg-[#00197e] rounded-full flex items-center justify-center text-white font-semibold">
+                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                         {chat.avatar}
                       </div>
                       {chat.online && (
@@ -275,7 +285,7 @@ const Messages = () => {
                     </div>
                     
                     {chat.unread > 0 && (
-                      <Badge className="bg-[#00197e] text-white text-xs">
+                      <Badge className="bg-blue-600 text-white text-xs">
                         {chat.unread}
                       </Badge>
                     )}
@@ -291,7 +301,7 @@ const Messages = () => {
                 <div
                   key={chat.id}
                   className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
-                    selectedChat === chat.id ? 'bg-[#00197e]/20 border border-[#00197e]/30' : ''
+                    selectedChat === chat.id ? 'bg-blue-600/20 border border-blue-600/30' : ''
                   }`}
                   onClick={() => setSelectedChat(chat.id)}
                 >
@@ -317,7 +327,7 @@ const Messages = () => {
                     </div>
                     
                     {chat.unread > 0 && (
-                      <Badge className="bg-[#00197e] text-white text-xs">
+                      <Badge className="bg-blue-600 text-white text-xs">
                         {chat.unread}
                       </Badge>
                     )}
@@ -333,7 +343,7 @@ const Messages = () => {
                 <div
                   key={chat.id}
                   className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-secondary/50 ${
-                    selectedChat === chat.id ? 'bg-[#00197e]/20 border border-[#00197e]/30' : ''
+                    selectedChat === chat.id ? 'bg-blue-600/20 border border-blue-600/30' : ''
                   }`}
                   onClick={() => setSelectedChat(chat.id)}
                 >
@@ -394,7 +404,7 @@ const Messages = () => {
             <div className="p-4 border-b border-border bg-card">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-[#00197e] rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                     {typeof currentChat.avatar === 'string' && currentChat.avatar.length <= 2 
                       ? currentChat.avatar 
                       : currentChat.name[0]
@@ -428,7 +438,7 @@ const Messages = () => {
                 <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
                     msg.isMe 
-                      ? 'bg-[#00197e] text-white' 
+                      ? 'bg-blue-600 text-white' 
                       : 'bg-secondary text-white'
                   }`}>
                     {!msg.isMe && (
@@ -475,7 +485,7 @@ const Messages = () => {
                     </Button>
                   </div>
                 </div>
-                <Button size="sm" className="bg-[#00197e] hover:bg-[#00197e]/80" onClick={handleSendMessage}>
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-600/80" onClick={handleSendMessage}>
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
