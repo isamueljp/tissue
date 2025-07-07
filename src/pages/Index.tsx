@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast';
 const Index = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
-  const [showLanding, setShowLanding] = useState(true);
   const [streakCount] = useState(7);
   const {
     user,
@@ -29,51 +28,51 @@ const Index = () => {
   const { toast } = useToast();
 
   // Stories data with placeholder fallback
-  const stories = [{
-    id: '1',
-    user: 'sarah_vibe',
-    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face',
-    hasUpdate: true,
-    isLive: true
-  }, {
-    id: '2',
-    user: 'alex_games',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face',
-    hasUpdate: true,
-    isLive: false
-  }, {
-    id: '3',
-    user: 'music_maven',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face',
-    hasUpdate: false,
-    isLive: true
-  }, {
-    id: '4',
-    user: 'night_owl',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face',
-    hasUpdate: true,
-    isLive: false
-  }, {
-    id: '5',
-    user: 'coffee_crew',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&h=60&fit=crop&crop=face',
-    hasUpdate: false,
-    isLive: false
-  }];
+  const stories = [
+    {
+      id: '1',
+      user: 'sarah_vibe',
+      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face',
+      hasUpdate: true,
+      isLive: true
+    }, {
+      id: '2',
+      user: 'alex_games',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face',
+      hasUpdate: true,
+      isLive: false
+    }, {
+      id: '3',
+      user: 'music_maven',
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face',
+      hasUpdate: false,
+      isLive: true
+    }, {
+      id: '4',
+      user: 'night_owl',
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face',
+      hasUpdate: true,
+      isLive: false
+    }, {
+      id: '5',
+      user: 'coffee_crew',
+      image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&h=60&fit=crop&crop=face',
+      hasUpdate: false,
+      isLive: false
+    }
+  ];
 
   const handleCreatePost = () => {
     setCreatePostModalOpen(true);
   };
 
   const handleGetStarted = () => {
-    setShowLanding(false);
     setLoginModalOpen(true);
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      setShowLanding(true);
       toast({
         title: "Signed out successfully",
         description: "You have been signed out of your account.",
@@ -88,7 +87,7 @@ const Index = () => {
   };
 
   // Show landing page for unauthenticated users
-  if (!user && !authLoading && showLanding) {
+  if (!user && !authLoading) {
     return <LandingPage onGetStarted={handleGetStarted} />;
   }
 
@@ -98,16 +97,6 @@ const Index = () => {
           <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
           <p>Loading fourth degree...</p>
         </div>
-      </div>;
-  }
-
-  // If user is not authenticated and not showing landing, show login
-  if (!user && !showLanding) {
-    return <div className="min-h-screen bg-black text-white">
-        <LoginModal isOpen={loginModalOpen} onClose={() => {
-          setLoginModalOpen(false);
-          setShowLanding(true);
-        }} />
       </div>;
   }
 
@@ -197,6 +186,7 @@ const Index = () => {
       </div>
 
       {/* Modals */}
+      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
       <CreatePostModal isOpen={createPostModalOpen} onClose={() => setCreatePostModalOpen(false)} />
     </div>;
 };

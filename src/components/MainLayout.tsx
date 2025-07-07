@@ -1,11 +1,14 @@
 
 import { Outlet, useLocation } from 'react-router-dom';
 import { BottomNavigation } from './BottomNavigation';
+import { useAuth } from '@/hooks/useAuth';
 
 const MainLayout = () => {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/' && location.search === '';
-  const shouldHideNavigation = isAuthPage;
+  const { user, loading } = useAuth();
+  
+  // Only hide navigation on landing page when user is not authenticated
+  const shouldHideNavigation = !user && !loading;
 
   return (
     <div className="flex min-h-screen bg-black text-white">
@@ -14,7 +17,7 @@ const MainLayout = () => {
         <Outlet />
       </div>
       
-      {/* Bottom Navigation - only show when authenticated */}
+      {/* Bottom Navigation - show when user is authenticated */}
       {!shouldHideNavigation && <BottomNavigation />}
     </div>
   );
