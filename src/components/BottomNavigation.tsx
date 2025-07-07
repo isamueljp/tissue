@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, TrendingUp, MessageSquare, Users, User, Vote, DollarSign, MapPin, Music } from 'lucide-react';
+import { Home, TrendingUp, MessageSquare, DollarSign, User } from 'lucide-react';
 
 export const BottomNavigation = () => {
   const location = useLocation();
@@ -25,26 +25,6 @@ export const BottomNavigation = () => {
       icon: MessageSquare,
       label: 'Messages',
       path: '/messages'
-    },
-    {
-      icon: Users,
-      label: 'Communities',
-      path: '/communities'
-    },
-    {
-      icon: Vote,
-      label: 'Voting',
-      path: '/voting'
-    },
-    {
-      icon: MapPin,
-      label: 'Travel',
-      path: '/travel'
-    },
-    {
-      icon: Music,
-      label: 'Music',
-      path: '/music'
     },
     {
       icon: User,
