@@ -9,10 +9,12 @@ import { usePosts } from '@/hooks/usePosts';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { CreatePostModal } from '@/components/CreatePostModal';
 import { PostCard } from '@/components/PostCard';
+import { LandingPage } from '@/components/LandingPage';
 
 const Index = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
+  const [showLanding, setShowLanding] = useState(true);
   const [streakCount] = useState(7);
   const {
     user,
@@ -58,23 +60,35 @@ const Index = () => {
   }];
 
   const handleCreatePost = () => {
-    if (!user) {
-      setLoginModalOpen(true);
-    } else {
-      setCreatePostModalOpen(true);
-    }
+    setCreatePostModalOpen(true);
   };
 
-  const handleLogin = () => {
+  const handleGetStarted = () => {
+    setShowLanding(false);
     setLoginModalOpen(true);
   };
+
+  // Show landing page for unauthenticated users
+  if (!user && !authLoading && showLanding) {
+    return <LandingPage onGetStarted={handleGetStarted} />;
+  }
 
   if (authLoading) {
     return <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
-          <p>Loading four degree...</p>
+          <p>Loading fourth degree...</p>
         </div>
+      </div>;
+  }
+
+  // If user is not authenticated and not showing landing, show login
+  if (!user && !showLanding) {
+    return <div className="min-h-screen bg-black text-white">
+        <LoginModal isOpen={loginModalOpen} onClose={() => {
+          setLoginModalOpen(false);
+          setShowLanding(true);
+        }} />
       </div>;
   }
 
@@ -86,21 +100,19 @@ const Index = () => {
             <div className="w-8 h-8 bg-[#00197e] rounded-full flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-[#00197e]">four degree</h1>
+            <h1 className="text-xl font-bold text-[#00197e]">fourth degree</h1>
           </div>
           
           <div className="flex items-center space-x-3">
-            {user && <div className="flex items-center space-x-1 bg-[#00197e]/20 px-2 py-1 rounded-full">
-                <Flame className="w-4 h-4 text-orange-500" />
-                <span className="text-xs font-bold">{streakCount}</span>
-              </div>}
+            <div className="flex items-center space-x-1 bg-[#00197e]/20 px-2 py-1 rounded-full">
+              <Flame className="w-4 h-4 text-orange-500" />
+              <span className="text-xs font-bold">{streakCount}</span>
+            </div>
             
-            {user ? <Button size="sm" onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80 px-3">
-                <Plus className="w-4 h-4 mr-1" />
-                Create
-              </Button> : <Button size="sm" onClick={handleLogin} className="px-3 bg-[#00197e]">
-                Sign In
-              </Button>}
+            <Button size="sm" onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80 px-3">
+              <Plus className="w-4 h-4 mr-1" />
+              Create
+            </Button>
           </div>
         </div>
       </div>
@@ -131,41 +143,32 @@ const Index = () => {
         </div>
 
         {/* Posts Feed */}
-        {!user && <div className="text-center py-8 space-y-4">
-            <h2 className="text-2xl font-bold">Welcome to four degree</h2>
-            <p className="text-gray-400">Join the community to see posts and connect with others</p>
-            <Button onClick={handleLogin} className="bg-[#00197e] hover:bg-[#00197e]/80">
-              Sign In to Continue
-            </Button>
-          </div>}
-
-        {user && <div className="space-y-4">
-            {postsLoading ? <div className="space-y-4">
-                {[1, 2, 3].map(i => <div key={i} className="bg-card border border-border rounded-lg p-4 animate-pulse">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
-                      <div className="space-y-2">
-                        <div className="w-24 h-4 bg-gray-700 rounded"></div>
-                        <div className="w-16 h-3 bg-gray-700 rounded"></div>
-                      </div>
-                    </div>
+        <div className="space-y-4">
+          {postsLoading ? <div className="space-y-4">
+              {[1, 2, 3].map(i => <div key={i} className="bg-card border border-border rounded-lg p-4 animate-pulse">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
                     <div className="space-y-2">
-                      <div className="w-full h-4 bg-gray-700 rounded"></div>
-                      <div className="w-3/4 h-4 bg-gray-700 rounded"></div>
+                      <div className="w-24 h-4 bg-gray-700 rounded"></div>
+                      <div className="w-16 h-3 bg-gray-700 rounded"></div>
                     </div>
-                  </div>)}
-              </div> : posts.length === 0 ? <div className="text-center py-8 space-y-4">
-                <h3 className="text-xl font-semibold">No posts yet</h3>
-                <p className="text-gray-400">Be the first to share something amazing!</p>
-                <Button onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80">
-                  Create First Post
-                </Button>
-              </div> : posts.map(post => <PostCard key={post.id} post={post} onLike={toggleLike} />)}
-          </div>}
+                  </div>
+                  <div className="space-y-2">
+                    <div className="w-full h-4 bg-gray-700 rounded"></div>
+                    <div className="w-3/4 h-4 bg-gray-700 rounded"></div>
+                  </div>
+                </div>)}
+            </div> : posts.length === 0 ? <div className="text-center py-8 space-y-4">
+              <h3 className="text-xl font-semibold">No posts yet</h3>
+              <p className="text-gray-400">Be the first to share something amazing!</p>
+              <Button onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80">
+                Create First Post
+              </Button>
+            </div> : posts.map(post => <PostCard key={post.id} post={post} onLike={toggleLike} />)}
+        </div>
       </div>
 
       {/* Modals */}
-      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
       <CreatePostModal isOpen={createPostModalOpen} onClose={() => setCreatePostModalOpen(false)} />
     </div>;
 };
