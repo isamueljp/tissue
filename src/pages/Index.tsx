@@ -111,7 +111,7 @@ const Index = () => {
       </div>;
   }
 
-  return <div className="min-h-screen bg-black text-white pb-20 md:pb-0">
+  return <div className="min-h-screen bg-black text-white pb-24">
       {/* Mobile Header */}
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
