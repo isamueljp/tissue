@@ -1,15 +1,15 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Heart, Sparkles, Play, Volume2, Flame, Star, Eye, Clock, UserPlus, Plus } from 'lucide-react';
+import { Search, Heart, Sparkles, Play, Volume2, Flame, Star, Eye, Clock, UserPlus, Plus, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePosts } from '@/hooks/usePosts';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { CreatePostModal } from '@/components/CreatePostModal';
 import { PostCard } from '@/components/PostCard';
 import { LandingPage } from '@/components/LandingPage';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -18,13 +18,15 @@ const Index = () => {
   const [streakCount] = useState(7);
   const {
     user,
-    loading: authLoading
+    loading: authLoading,
+    signOut
   } = useAuth();
   const {
     posts,
     loading: postsLoading,
     toggleLike
   } = usePosts();
+  const { toast } = useToast();
 
   // Stories data with placeholder fallback
   const stories = [{
@@ -68,6 +70,23 @@ const Index = () => {
     setLoginModalOpen(true);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setShowLanding(true);
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Show landing page for unauthenticated users
   if (!user && !authLoading && showLanding) {
     return <LandingPage onGetStarted={handleGetStarted} />;
@@ -92,7 +111,7 @@ const Index = () => {
       </div>;
   }
 
-  return <div className="min-h-screen bg-black text-white">
+  return <div className="min-h-screen bg-black text-white pb-20 md:pb-0">
       {/* Mobile Header */}
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
@@ -113,15 +132,24 @@ const Index = () => {
               <Plus className="w-4 h-4 mr-1" />
               Create
             </Button>
+
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={handleSignOut}
+              className="text-gray-400 hover:text-white px-2"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="max-w-lg mx-auto p-4 space-y-4">
         {/* Stories Section */}
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2">
           {stories.map(story => <div key={story.id} className="flex-shrink-0 relative">
-              <div className={`w-16 h-16 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-[#00197e] to-pink-500' : 'bg-gray-600'}`}>
+              <div className={`w-12 h-12 rounded-full p-0.5 ${story.hasUpdate ? 'bg-gradient-to-r from-[#00197e] to-pink-500' : 'bg-gray-600'}`}>
                 <div className="w-full h-full bg-black rounded-full p-0.5">
                   <img src={story.image} alt={story.user} className="w-full h-full rounded-full object-cover" onError={e => {
                 console.log('Image failed to load:', story.image);
@@ -130,9 +158,9 @@ const Index = () => {
                 </div>
               </div>
               {story.isLive && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-[#00197e] text-xs px-1 py-0">LIVE</Badge>
+                  <Badge className="bg-red-500 text-xs px-1 py-0 text-white">LIVE</Badge>
                 </div>}
-              <p className="text-xs text-center mt-1 truncate w-16">{story.user.split('_')[0]}</p>
+              <p className="text-xs text-center mt-1 truncate w-12 text-gray-300">{story.user.split('_')[0]}</p>
             </div>)}
         </div>
 
