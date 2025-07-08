@@ -53,6 +53,57 @@ export type Database = {
           },
         ]
       }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          donation_amount: string | null
+          donation_link: string | null
+          event_type: string
+          hashtags: string[] | null
+          id: string
+          image_url: string | null
+          location_lat: number | null
+          location_lng: number | null
+          location_name: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          donation_amount?: string | null
+          donation_link?: string | null
+          event_type: string
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          donation_amount?: string | null
+          donation_link?: string | null
+          event_type?: string
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string

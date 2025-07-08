@@ -12,14 +12,15 @@ export const BottomNavigation = () => {
       path: '/'
     },
     {
-      icon: TrendingUp,
-      label: 'Events',
-      path: '/events'
-    },
-    {
       icon: DollarSign,
       label: 'Invest',
       path: '/invest'
+    },
+    {
+      icon: TrendingUp,
+      label: 'Events',
+      path: '/events',
+      isCenter: true
     },
     {
       icon: MessageSquare,
@@ -40,13 +41,23 @@ export const BottomNavigation = () => {
           <Link
             key={item.path}
             to={item.path}
-            className={`flex flex-col items-center justify-center p-2 rounded-lg transition-colors min-w-[60px] ${
+            className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all min-w-[60px] ${
               location.pathname === item.path
-                ? 'text-[#00197e] bg-[#00197e]/20'
+                ? 'text-[#00197e] bg-[#00197e]/20 shadow-lg shadow-[#00197e]/20'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            <item.icon className="w-4 h-4 mb-1" />
+            <item.icon 
+              className={`mb-1 transition-all ${
+                item.isCenter 
+                  ? 'w-6 h-6' 
+                  : 'w-4 h-4'
+              } ${
+                location.pathname === item.path && item.isCenter
+                  ? 'drop-shadow-[0_0_8px_rgba(0,25,126,0.6)]'
+                  : ''
+              }`} 
+            />
             <span className="text-xs">{item.label}</span>
           </Link>
         ))}

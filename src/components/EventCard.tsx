@@ -1,153 +1,102 @@
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Users, MessageSquare, Package, ExternalLink } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MapPin, Calendar, DollarSign, Hash, Share, Heart } from 'lucide-react';
+import { Event } from '@/hooks/useEvents';
+import { formatDistanceToNow } from 'date-fns';
 
 interface EventCardProps {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  location: string;
-  attendeeCount: number;
-  maxAttendees: number;
-  points: number;
-  category: string;
-  isVip?: boolean;
-  hostName: string;
-  image?: string;
+  event: Event;
+  onEventClick: (event: Event) => void;
 }
 
-const EventCard = ({ 
-  title, 
-  description, 
-  date, 
-  time, 
-  location, 
-  attendeeCount, 
-  maxAttendees, 
-  points, 
-  category, 
-  isVip = false,
-  hostName,
-  image 
-}: EventCardProps) => {
-  const attendancePercentage = (attendeeCount / maxAttendees) * 100;
-
-  const handleJoinWhatsApp = () => {
-    // Simulate WhatsApp group join
-    window.open('https://chat.whatsapp.com/invite-link', '_blank');
-  };
+export const EventCard = ({ event, onEventClick }: EventCardProps) => {
+  const timeAgo = formatDistanceToNow(new Date(event.created_at), { addSuffix: true });
 
   return (
-    <Card className="discord-card hover-lift overflow-hidden group">
-      {/* Event Image */}
-      <div className="relative h-40 bg-gradient-to-br from-primary/20 to-accent/20 overflow-hidden">
-        {image ? (
-          <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-            <MessageSquare className="w-12 h-12 text-primary/50" />
-          </div>
-        )}
-        
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex gap-2">
-          <Badge variant={isVip ? "default" : "secondary"} className={isVip ? "bg-primary" : ""}>
-            {category}
-          </Badge>
-          {isVip && <Badge className="bg-accent">VIP</Badge>}
-        </div>
-        
-        {/* Live indicator */}
-        <div className="absolute top-3 right-3">
-          <div className="flex items-center space-x-1 bg-background/80 rounded-full px-2 py-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-xs">Live</span>
+    <Card className="bg-card border border-border p-4 space-y-3 cursor-pointer hover:border-[#00197e]/30 transition-all" onClick={() => onEventClick(event)}>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Avatar className="w-10 h-10">
+            <AvatarImage src={event.profiles.avatar_url || ''} />
+            <AvatarFallback className="bg-[#00197e] text-white">
+              {event.profiles.full_name?.charAt(0) || event.profiles.username?.charAt(0) || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-medium text-white">
+              {event.profiles.full_name || event.profiles.username || 'Anonymous'}
+            </p>
+            <p className="text-xs text-gray-400">{timeAgo}</p>
           </div>
         </div>
+        <Badge className="bg-[#00197e] text-white">
+          {event.event_type}
+        </Badge>
       </div>
 
-      <div className="p-4 space-y-4">
-        {/* Event Header */}
-        <div>
-          <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
-            {title}
-          </h3>
-          <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
-        </div>
-
+      {/* Content */}
+      <div className="space-y-3">
+        <h3 className="font-bold text-white text-lg">{event.title}</h3>
+        {event.description && (
+          <p className="text-gray-300 leading-relaxed">{event.description}</p>
+        )}
+        
         {/* Event Details */}
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Calendar className="w-4 h-4 mr-2 text-primary" />
-            <span>{date} • {time}</span>
+        <div className="space-y-2">
+          <div className="flex items-center text-sm text-gray-400">
+            <Calendar className="w-4 h-4 mr-2 text-blue-500" />
+            {new Date(event.created_at).toLocaleDateString()} at {new Date(event.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
           
-          <div className="flex items-center text-muted-foreground">
-            <MapPin className="w-4 h-4 mr-2 text-primary" />
-            <span>{location}</span>
-          </div>
+          {event.location_name && (
+            <div className="flex items-center text-sm text-gray-400">
+              <MapPin className="w-4 h-4 mr-2 text-red-500" />
+              {event.location_name}
+            </div>
+          )}
           
-          <div className="flex items-center text-muted-foreground">
-            <Users className="w-4 h-4 mr-2 text-primary" />
-            <span>{attendeeCount}/{maxAttendees} joined</span>
+          {event.donation_amount && (
+            <div className="flex items-center text-sm text-gray-400">
+              <DollarSign className="w-4 h-4 mr-2 text-green-500" />
+              Suggested donation: {event.donation_amount}
+            </div>
+          )}
+        </div>
+
+        {/* Hashtags */}
+        {event.hashtags && event.hashtags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {event.hashtags.map((tag, index) => (
+              <Badge key={index} variant="outline" className="text-xs border-gray-600 text-gray-400">
+                #{tag}
+              </Badge>
+            ))}
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Attendance Progress */}
-        <div>
-          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-            <span>Attendance</span>
-            <span>{Math.round(attendancePercentage)}%</span>
-          </div>
-          <div className="w-full bg-secondary rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-primary to-accent h-2 rounded-full transition-all duration-300"
-              style={{ width: `${attendancePercentage}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Host & Points */}
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">by @{hostName}</span>
-          <span className="font-semibold text-primary">{points} pts</span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2">
-          <Button className="bg-primary hover:bg-primary/90" size="sm">
-            <Users className="w-4 h-4 mr-1" />
-            Join
+      {/* Actions */}
+      <div className="flex items-center justify-between pt-2 border-t border-border">
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-400">
+            <Heart className="w-4 h-4 mr-1" />
+            <span className="text-xs">0</span>
           </Button>
-          <Button variant="outline" size="sm">
-            <MessageSquare className="w-4 h-4 mr-1" />
-            Chat
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-400">
+            <Share className="w-4 h-4" />
           </Button>
         </div>
-
-        {/* Discord-like action buttons */}
-        <div className="flex gap-2">
-          <Button 
-            variant="secondary" 
-            size="sm" 
-            className="flex-1"
-            onClick={handleJoinWhatsApp}
-          >
-            <ExternalLink className="w-4 h-4 mr-1" />
-            WhatsApp
+        {event.donation_link && (
+          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+            <DollarSign className="w-4 h-4 mr-1" />
+            Donate
           </Button>
-          <Button variant="secondary" size="sm" className="flex-1">
-            <Package className="w-4 h-4 mr-1" />
-            Contribute
-          </Button>
-        </div>
+        )}
       </div>
     </Card>
   );
 };
-
-export default EventCard;
