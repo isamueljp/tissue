@@ -27,6 +27,8 @@ const Index = () => {
   } = usePosts();
   const { toast } = useToast();
 
+  console.log('Index component state:', { user, authLoading, loginModalOpen });
+
   // Stories data with placeholder fallback
   const stories = [
     {
@@ -67,6 +69,7 @@ const Index = () => {
   };
 
   const handleGetStarted = () => {
+    console.log('Get Started button clicked');
     setLoginModalOpen(true);
   };
 
@@ -88,10 +91,12 @@ const Index = () => {
 
   // Show landing page for unauthenticated users
   if (!user && !authLoading) {
+    console.log('Showing landing page');
     return <LandingPage onGetStarted={handleGetStarted} />;
   }
 
   if (authLoading) {
+    console.log('Showing loading screen');
     return <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 bg-[#00197e] rounded-full animate-pulse mb-4 mx-auto"></div>
@@ -99,6 +104,8 @@ const Index = () => {
         </div>
       </div>;
   }
+
+  console.log('Showing main app');
 
   return <div className="min-h-screen bg-black text-white pb-24">
       {/* Mobile Header */}

@@ -24,6 +24,8 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const { signIn, signUp, signInWithGoogle } = useAuth();
   const { toast } = useToast();
 
+  console.log('LoginModal rendered, isOpen:', isOpen);
+
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -34,6 +36,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with:', { email, password, isSignUp });
     
     if (!email.trim() || !password) {
       toast({
@@ -76,10 +79,14 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     try {
       let result;
       if (isSignUp) {
+        console.log('Attempting sign up...');
         result = await signUp(email, password, fullName);
       } else {
+        console.log('Attempting sign in...');
         result = await signIn(email, password);
       }
+
+      console.log('Auth result:', result);
 
       if (result.error) {
         console.error('Auth error:', result.error);
@@ -91,7 +98,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       } else {
         toast({
           title: "Success",
-          description: isSignUp ? "Account created successfully! Please check your email for verification." : "Welcome back!",
+          description: isSignUp ? "Account created successfully!" : "Welcome back!",
         });
         onClose();
         // Clear form
@@ -113,6 +120,7 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   };
 
   const handleGoogleSignIn = async () => {
+    console.log('Google sign in clicked');
     setLoading(true);
     try {
       const { error } = await signInWithGoogle();
