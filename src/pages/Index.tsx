@@ -1,14 +1,17 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Heart, Sparkles, Play, Volume2, Flame, Star, Eye, Clock, UserPlus, Plus, LogOut } from 'lucide-react';
+import { Search, Heart, Sparkles, Play, Volume2, Flame, Star, Eye, Clock, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePosts } from '@/hooks/usePosts';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { CreatePostModal } from '@/components/CreatePostModal';
 import { PostCard } from '@/components/PostCard';
 import { LandingPage } from '@/components/LandingPage';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
+import { NearbyPartiesBar } from '@/components/NearbyPartiesBar';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -133,11 +136,6 @@ const Index = () => {
               <Flame className="w-4 h-4 text-orange-500" />
               <span className="text-xs font-bold">{streakCount}</span>
             </div>
-            
-            <Button size="sm" onClick={handleCreatePost} className="bg-[#00197e] hover:bg-[#00197e]/80 px-3">
-              <Plus className="w-4 h-4 mr-1" />
-              Create
-            </Button>
 
             <Button 
               size="sm" 
@@ -176,6 +174,9 @@ const Index = () => {
           <Input placeholder="What's the vibe?" className="pl-12 bg-secondary/50 border-0 rounded-full text-lg py-3" />
         </div>
 
+        {/* Nearby Parties Bar */}
+        <NearbyPartiesBar />
+
         {/* Posts Feed */}
         <div className="space-y-4">
           {postsLoading ? <div className="space-y-4">
@@ -201,6 +202,9 @@ const Index = () => {
             </div> : posts.map(post => <PostCard key={post.id} post={post} onLike={toggleLike} />)}
         </div>
       </div>
+
+      {/* Floating Action Button */}
+      <FloatingActionButton onClick={handleCreatePost} />
 
       {/* Modals */}
       <CreatePostModal isOpen={createPostModalOpen} onClose={() => setCreatePostModalOpen(false)} />

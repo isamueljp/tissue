@@ -1,12 +1,13 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Heart, MessageCircle, Forward, MoreVertical } from 'lucide-react';
 import { Post } from '@/hooks/usePosts';
 import { formatDistanceToNow } from 'date-fns';
-import { SharePostModal } from './SharePostModal';
+import { EnhancedSharePostModal } from './EnhancedSharePostModal';
 import { CommentsSection } from './CommentsSection';
 
 interface PostCardProps {
@@ -17,14 +18,19 @@ interface PostCardProps {
 export const PostCard = ({ post, onLike }: PostCardProps) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const navigate = useNavigate();
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+
+  const handleProfileClick = () => {
+    navigate(`/profile/${post.user_id}`);
+  };
 
   return (
     <>
       <Card className="bg-card border border-border p-4 space-y-3">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={handleProfileClick}>
             <Avatar className="w-10 h-10">
               <AvatarImage src={post.profiles.avatar_url} />
               <AvatarFallback className="bg-[#00197e] text-white">
@@ -32,7 +38,7 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-white">
+              <p className="font-medium text-white hover:text-[#00197e] transition-colors">
                 {post.profiles.full_name || post.profiles.username || 'Anonymous'}
               </p>
               <p className="text-xs text-gray-400">{timeAgo}</p>
@@ -106,7 +112,7 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
         <CommentsSection postId={post.id} isVisible={showComments} />
       </Card>
 
-      <SharePostModal
+      <EnhancedSharePostModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         postContent={post.content}
