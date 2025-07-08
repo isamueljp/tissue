@@ -69,7 +69,7 @@ const Index = () => {
   };
 
   const handleGetStarted = () => {
-    console.log('Get Started button clicked');
+    console.log('Get Started button clicked - opening modal');
     setLoginModalOpen(true);
   };
 
@@ -89,10 +89,20 @@ const Index = () => {
     }
   };
 
+  const handleModalClose = () => {
+    console.log('Closing login modal');
+    setLoginModalOpen(false);
+  };
+
   // Show landing page for unauthenticated users
   if (!user && !authLoading) {
     console.log('Showing landing page');
-    return <LandingPage onGetStarted={handleGetStarted} />;
+    return (
+      <>
+        <LandingPage onGetStarted={handleGetStarted} />
+        <LoginModal isOpen={loginModalOpen} onClose={handleModalClose} />
+      </>
+    );
   }
 
   if (authLoading) {
@@ -193,7 +203,6 @@ const Index = () => {
       </div>
 
       {/* Modals */}
-      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
       <CreatePostModal isOpen={createPostModalOpen} onClose={() => setCreatePostModalOpen(false)} />
     </div>;
 };
