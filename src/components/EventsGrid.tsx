@@ -17,6 +17,11 @@ const EventsGrid = () => {
     setSelectedEvent(event);
   };
 
+  const handleRSVP = (event: any) => {
+    console.log('RSVP for event:', event.title);
+    // Handle RSVP logic here
+  };
+
   const vipEvents = events.filter(event => event.event_type === 'VIP' || event.event_type === 'Club Party');
 
   return (
@@ -86,6 +91,7 @@ const EventsGrid = () => {
                       key={event.id}
                       event={event}
                       onEventClick={handleEventClick}
+                      onRSVP={handleRSVP}
                     />
                   ))}
                 </div>
@@ -108,6 +114,7 @@ const EventsGrid = () => {
                       key={event.id}
                       event={event}
                       onEventClick={handleEventClick}
+                      onRSVP={handleRSVP}
                     />
                   ))}
                 </div>
