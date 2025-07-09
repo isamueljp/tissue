@@ -27,58 +27,58 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
 
   return (
     <>
-      <Card className="bg-card border border-border p-4 space-y-3">
-        {/* Header */}
+      <Card className="bg-card border border-border p-3 space-y-2">
+        {/* Header - Smaller */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={handleProfileClick}>
-            <Avatar className="w-10 h-10">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={handleProfileClick}>
+            <Avatar className="w-8 h-8">
               <AvatarImage src={post.profiles.avatar_url} />
-              <AvatarFallback className="bg-[#00197e] text-white">
+              <AvatarFallback className="bg-[#00197e] text-white text-sm">
                 {post.profiles.full_name?.charAt(0) || post.profiles.username?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-white hover:text-[#00197e] transition-colors">
+              <p className="font-medium text-white hover:text-[#00197e] transition-colors text-sm">
                 {post.profiles.full_name || post.profiles.username || 'Anonymous'}
               </p>
               <p className="text-xs text-gray-400">{timeAgo}</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-            <MoreVertical className="w-4 h-4" />
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white p-1">
+            <MoreVertical className="w-3 h-3" />
           </Button>
         </div>
 
-        {/* Content */}
-        <div className="space-y-3">
-          <p className="text-white leading-relaxed">{post.content}</p>
+        {/* Content - Smaller */}
+        <div className="space-y-2">
+          <p className="text-white leading-relaxed text-sm">{post.content}</p>
           
           {post.image_url && (
             <div className="rounded-lg overflow-hidden">
               <img
                 src={post.image_url}
                 alt="Post image"
-                className="w-full h-auto max-h-96 object-cover"
+                className="w-full h-auto max-h-64 object-cover"
               />
             </div>
           )}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-2 border-t border-border">
-          <div className="flex items-center space-x-6">
+        {/* Actions - Smaller */}
+        <div className="flex items-center justify-between pt-1 border-t border-border">
+          <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onLike(post.id)}
-              className={`flex items-center space-x-1 p-2 ${
+              className={`flex items-center space-x-1 p-1 ${
                 post.user_has_liked 
                   ? 'text-[#00197e] hover:text-[#00197e]/80' 
                   : 'text-gray-400 hover:text-[#00197e]'
               }`}
             >
               <Heart 
-                className={`w-4 h-4 ${post.user_has_liked ? 'fill-current' : ''}`} 
+                className={`w-3 h-3 ${post.user_has_liked ? 'fill-current' : ''}`} 
               />
               <span className="text-xs">{post.likes_count}</span>
             </Button>
@@ -87,13 +87,13 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
               variant="ghost" 
               size="sm" 
               onClick={() => setShowComments(!showComments)}
-              className={`flex items-center space-x-1 p-2 ${
+              className={`flex items-center space-x-1 p-1 ${
                 showComments 
                   ? 'text-[#00197e] hover:text-[#00197e]/80' 
                   : 'text-gray-400 hover:text-[#00197e]'
               }`}
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-3 h-3" />
               <span className="text-xs">{post.comments_count}</span>
             </Button>
             
@@ -101,9 +101,9 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
               variant="ghost" 
               size="sm" 
               onClick={() => setShareModalOpen(true)}
-              className="text-gray-400 hover:text-[#00197e] p-2"
+              className="text-gray-400 hover:text-[#00197e] p-1"
             >
-              <Forward className="w-4 h-4" />
+              <Forward className="w-3 h-3" />
             </Button>
           </div>
         </div>
