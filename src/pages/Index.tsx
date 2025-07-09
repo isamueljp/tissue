@@ -12,12 +12,18 @@ import { PostCard } from '@/components/PostCard';
 import { LandingPage } from '@/components/LandingPage';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { NearbyPartiesBar } from '@/components/NearbyPartiesBar';
+import { InteractiveEventRadar } from '@/components/InteractiveEventRadar';
+import { RealTimeSocialPulse } from '@/components/RealTimeSocialPulse';
+import { SmartInterestFilters } from '@/components/SmartInterestFilters';
+import { DailyDrop } from '@/components/DailyDrop';
+import { AnimatedHeader } from '@/components/AnimatedHeader';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
   const [streakCount] = useState(7);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const {
     user,
     loading: authLoading,
@@ -97,6 +103,12 @@ const Index = () => {
     setLoginModalOpen(false);
   };
 
+  const handleFilterChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    // Filter posts based on active filters
+    console.log('Active filters:', filters);
+  };
+
   // Show landing page for unauthenticated users
   if (!user && !authLoading) {
     console.log('Showing landing page');
@@ -149,7 +161,22 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="max-w-sm mx-auto p-3 space-y-3">
+      <div className="max-w-sm mx-auto p-3 space-y-4">
+        {/* Animated Header */}
+        <AnimatedHeader />
+
+        {/* Interactive Event Radar */}
+        <InteractiveEventRadar />
+
+        {/* Real-Time Social Pulse */}
+        <RealTimeSocialPulse />
+
+        {/* Smart Interest Filters */}
+        <SmartInterestFilters onFilterChange={handleFilterChange} />
+
+        {/* Daily Drop */}
+        <DailyDrop />
+
         {/* Stories Section - Smaller */}
         <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-1">
           {stories.map(story => <div key={story.id} className="flex-shrink-0 relative">
