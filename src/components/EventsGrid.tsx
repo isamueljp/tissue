@@ -1,3 +1,4 @@
+
 import { EventCard } from './EventCard';
 import EventChat from './EventChat';
 import ContributionBoard from './ContributionBoard';
@@ -5,54 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Hash, Zap } from 'lucide-react';
 import { Input } from "@/components/ui/input";
+import { useEvents } from '@/hooks/useEvents';
+import { useState } from 'react';
 
 const EventsGrid = () => {
-  // Mock event data
-  const events = [
-    {
-      id: '1',
-      title: 'VIP Pool Party Mixer',
-      description: 'Exclusive rooftop pool party with DJ, premium drinks, and networking opportunities.',
-      date: 'Sat, Dec 30',
-      time: '8:00 PM',
-      location: 'Luxury Rooftop - Downtown',
-      attendeeCount: 38,
-      maxAttendees: 50,
-      points: 150,
-      category: 'Pool Party',
-      isVip: true,
-      hostName: 'sarah_chen',
-      image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400'
-    },
-    {
-      id: '2',
-      title: 'Gaming Tournament Night',
-      description: 'Competitive gaming with prizes, snacks, and energy drinks.',
-      date: 'Fri, Dec 29',
-      time: '7:00 PM',
-      location: 'Student Center - Room 205',
-      attendeeCount: 24,
-      maxAttendees: 30,
-      points: 75,
-      category: 'Gaming',
-      isVip: false,
-      hostName: 'alex_rodriguez'
-    },
-    {
-      id: '3',
-      title: 'Study Group & Coffee',
-      description: 'Finals prep session with coffee, snacks, and good vibes.',
-      date: 'Thu, Dec 28',
-      time: '2:00 PM',
-      location: 'Library - Study Hall',
-      attendeeCount: 12,
-      maxAttendees: 20,
-      points: 50,
-      category: 'Study',
-      isVip: false,
-      hostName: 'maya_patel'
-    }
-  ];
+  const { events, loading, error } = useEvents();
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleEventClick = (event: any) => {
+    setSelectedEvent(event);
+  };
+
+  const vipEvents = events.filter(event => event.event_type === 'VIP' || event.event_type === 'Club Party');
 
   return (
     <section className="py-8 px-4">
@@ -97,17 +62,39 @@ const EventsGrid = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Events Grid */}
               <div className="lg:col-span-2">
+                {loading && (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Loading events...</p>
+                  </div>
+                )}
+                
+                {error && (
+                  <div className="text-center py-8">
+                    <p className="text-red-400">Error: {error}</p>
+                  </div>
+                )}
+                
+                {!loading && !error && events.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">No events found. Be the first to create one!</p>
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {events.map((event) => (
-                    <EventCard key={event.id} {...event} />
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      onEventClick={handleEventClick}
+                    />
                   ))}
                 </div>
               </div>
               
               {/* Chat and Contributions Sidebar */}
               <div className="space-y-6">
-                <EventChat eventTitle="VIP Pool Party Mixer" />
-                <ContributionBoard eventTitle="VIP Pool Party Mixer" />
+                <EventChat eventTitle="Active Events" />
+                <ContributionBoard eventTitle="Active Events" />
               </div>
             </div>
           </TabsContent>
@@ -116,8 +103,12 @@ const EventsGrid = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {events.filter(event => event.isVip).map((event) => (
-                    <EventCard key={event.id} {...event} />
+                  {vipEvents.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      onEventClick={handleEventClick}
+                    />
                   ))}
                 </div>
               </div>
