@@ -43,19 +43,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const getRedirectUrl = () => {
-    // Use production domain for mobile apps and deployed versions
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname === 'localhost' || hostname.includes('lovableproject.com')) {
-        return `${window.location.origin}/`;
-      }
-    }
-    return 'https://fourth-degree.com/';
-  };
-
   const signIn = async (email: string, password: string) => {
     console.log('Attempting sign in with:', email);
+    setLoading(true);
+    
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
@@ -64,6 +55,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) {
         console.error('Sign in error:', error);
+        setLoading(false);
+        
         // Handle specific error cases
         if (error.message.includes('Invalid login credentials')) {
           return { data: null, error: { message: 'Invalid email or password. Please check your credentials.' } };
@@ -71,27 +64,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (error.message.includes('Email not confirmed')) {
           return { data: null, error: { message: 'Please check your email and click the confirmation link.' } };
         }
+        if (error.message.includes('Load failed') || error.message.includes('fetch')) {
+          return { data: null, error: { message: 'Connection error. Please check your internet connection and try again.' } };
+        }
         return { data: null, error: { message: error.message } };
       }
       
       console.log('Sign in successful:', data);
+      setLoading(false);
       return { data, error: null };
     } catch (err) {
       console.error('Unexpected sign in error:', err);
-      return { data: null, error: { message: 'An unexpected error occurred. Please try again.' } };
+      setLoading(false);
+      return { data: null, error: { message: 'Connection error. Please check your internet connection and try again.' } };
     }
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     console.log('Attempting sign up with:', email, fullName);
+    setLoading(true);
+    
     try {
-      const redirectUrl = getRedirectUrl();
-      
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName?.trim(),
           },
@@ -100,6 +97,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) {
         console.error('Sign up error:', error);
+        setLoading(false);
+        
         // Handle specific error cases
         if (error.message.includes('User already registered')) {
           return { data: null, error: { message: 'An account with this email already exists. Please sign in instead.' } };
@@ -107,38 +106,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (error.message.includes('Password should be at least')) {
           return { data: null, error: { message: 'Password must be at least 6 characters long.' } };
         }
+        if (error.message.includes('Load failed') || error.message.includes('fetch')) {
+          return { data: null, error: { message: 'Connection error. Please check your internet connection and try again.' } };
+        }
         return { data: null, error: { message: error.message } };
       }
       
       console.log('Sign up successful:', data);
+      setLoading(false);
       return { data, error: null };
     } catch (err) {
       console.error('Unexpected sign up error:', err);
-      return { data: null, error: { message: 'An unexpected error occurred. Please try again.' } };
+      setLoading(false);
+      return { data: null, error: { message: 'Connection error. Please check your internet connection and try again.' } };
     }
   };
 
   const signInWithGoogle = async () => {
     console.log('Attempting Google sign in');
+    setLoading(true);
+    
     try {
-      const redirectUrl = getRedirectUrl();
-      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: `${window.location.origin}/`,
         },
       });
       
       if (error) {
         console.error('Google sign in error:', error);
+        setLoading(false);
         return { data: null, error: { message: 'Failed to sign in with Google. Please try again.' } };
       }
       
       console.log('Google sign in initiated:', data);
+      setLoading(false);
       return { data, error: null };
     } catch (err) {
       console.error('Google auth error:', err);
+      setLoading(false);
       return { 
         data: null, 
         error: { 
@@ -150,25 +157,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithInstagram = async () => {
     console.log('Attempting Instagram sign in');
+    setLoading(true);
+    
     try {
-      const redirectUrl = getRedirectUrl();
-      
       const { data, error } = await (supabase.auth.signInWithOAuth as any)({
         provider: 'instagram',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: `${window.location.origin}/`,
         },
       });
       
       if (error) {
         console.error('Instagram sign in error:', error);
+        setLoading(false);
         return { data: null, error: { message: 'Instagram authentication is not configured. Please contact support.' } };
       }
       
       console.log('Instagram sign in initiated:', data);
+      setLoading(false);
       return { data, error: null };
     } catch (err) {
       console.error('Instagram auth error:', err);
+      setLoading(false);
       return { 
         data: null, 
         error: { 
@@ -180,16 +190,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     console.log('Attempting sign out');
+    setLoading(true);
+    
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
+        setLoading(false);
         return { error: { message: 'Failed to sign out. Please try again.' } };
       }
       console.log('Sign out successful');
+      setLoading(false);
       return { error: null };
     } catch (err) {
       console.error('Unexpected sign out error:', err);
+      setLoading(false);
       return { error: { message: 'An unexpected error occurred during sign out.' } };
     }
   };
