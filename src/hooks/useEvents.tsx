@@ -37,28 +37,48 @@ export const useEvents = () => {
       setLoading(true);
       setError(null);
       
-      const { data, error } = await supabase
+      // First get all events
+      const { data: eventsData, error: eventsError } = await supabase
         .from('events')
-        .select(`
-          *,
-          profiles!events_user_id_fkey (
-            id,
-            username,
-            full_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      if (eventsError) {
+        console.error('Supabase error:', eventsError);
+        throw eventsError;
       }
 
-      // Transform the data to match our Event interface
-      const transformedEvents = (data || []).map(event => ({
+      if (!eventsData || eventsData.length === 0) {
+        setEvents([]);
+        return;
+      }
+
+      // Get all unique user IDs from events
+      const userIds = [...new Set(eventsData.map(event => event.user_id))];
+      
+      // Get profiles for these users
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username, full_name, avatar_url')
+        .in('id', userIds);
+
+      if (profilesError) {
+        console.error('Profiles error:', profilesError);
+        // Continue without profiles data rather than failing completely
+      }
+
+      // Create a map of user_id to profile
+      const profilesMap = new Map();
+      if (profilesData) {
+        profilesData.forEach(profile => {
+          profilesMap.set(profile.id, profile);
+        });
+      }
+
+      // Combine events with their profiles
+      const transformedEvents: Event[] = eventsData.map(event => ({
         ...event,
-        profiles: event.profiles || {
+        profiles: profilesMap.get(event.user_id) || {
           id: event.user_id,
           username: null,
           full_name: null,
@@ -92,23 +112,22 @@ export const useEvents = () => {
     const { data, error } = await supabase
       .from('events')
       .insert([{ ...eventData, user_id: user.id }])
-      .select(`
-        *,
-        profiles!events_user_id_fkey (
-          id,
-          username,
-          full_name,
-          avatar_url
-        )
-      `)
+      .select()
       .single();
 
     if (error) throw error;
     
-    const transformedEvent = {
+    // Get the profile for this user
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('id, username, full_name, avatar_url')
+      .eq('id', user.id)
+      .single();
+    
+    const transformedEvent: Event = {
       ...data,
-      profiles: data.profiles || {
-        id: data.user_id,
+      profiles: profileData || {
+        id: user.id,
         username: null,
         full_name: null,
         avatar_url: null
