@@ -1,5 +1,4 @@
-
-import EventCard from './EventCard';
+import { EventCard } from './EventCard';
 import EventChat from './EventChat';
 import ContributionBoard from './ContributionBoard';
 import { Button } from "@/components/ui/button";
