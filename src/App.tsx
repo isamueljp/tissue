@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import MainLayout from "./components/MainLayout";
 import Index from "./pages/Index";
 import Events from "./pages/Events";
+import CreateEvent from "./pages/CreateEvent";
 import Invest from "./pages/Invest";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Index />} />
               <Route path="events" element={<Events />} />
+              <Route path="create-event" element={<CreateEvent />} />
               <Route path="invest" element={<Invest />} />
               <Route path="messages" element={<Messages />} />
               <Route path="profile" element={<Profile />} />

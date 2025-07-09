@@ -35,11 +35,13 @@ export const useEvents = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const { data, error } = await supabase
         .from('events')
         .select(`
           *,
-          profiles (
+          profiles!events_user_id_fkey (
             id,
             username,
             full_name,
@@ -48,10 +50,26 @@ export const useEvents = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setEvents(data || []);
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      // Transform the data to match our Event interface
+      const transformedEvents = (data || []).map(event => ({
+        ...event,
+        profiles: event.profiles || {
+          id: event.user_id,
+          username: null,
+          full_name: null,
+          avatar_url: null
+        }
+      }));
+
+      setEvents(transformedEvents);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error fetching events:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while fetching events');
     } finally {
       setLoading(false);
     }
@@ -76,7 +94,7 @@ export const useEvents = () => {
       .insert([{ ...eventData, user_id: user.id }])
       .select(`
         *,
-        profiles (
+        profiles!events_user_id_fkey (
           id,
           username,
           full_name,
@@ -87,8 +105,18 @@ export const useEvents = () => {
 
     if (error) throw error;
     
-    setEvents(prev => [data, ...prev]);
-    return data;
+    const transformedEvent = {
+      ...data,
+      profiles: data.profiles || {
+        id: data.user_id,
+        username: null,
+        full_name: null,
+        avatar_url: null
+      }
+    };
+
+    setEvents(prev => [transformedEvent, ...prev]);
+    return transformedEvent;
   };
 
   useEffect(() => {
